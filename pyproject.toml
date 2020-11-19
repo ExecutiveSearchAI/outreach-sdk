@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "outreach-sdk"
+version = "0.1.0"
+description = "Outreach API wrapper in Python"
+authors = ["Cuddlemuffin007 <brennonkrogers@gmail.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
