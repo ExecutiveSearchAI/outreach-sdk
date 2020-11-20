@@ -46,4 +46,5 @@ repos:
         language: system
         entry: poetry run pytest --cov=tests
         types: [python]
+        always_run: true
         pass_filenames: false
