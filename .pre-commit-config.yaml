@@ -27,7 +27,7 @@ repos:
         name: mypy
         stages: [commit]
         language: system
-        entry: poetry run mypy
+        entry: poetry run mypy .
         types: [python]
         pass_filenames: false
 
@@ -44,7 +44,7 @@ repos:
         name: pytest-cov
         stages: [push]
         language: system
-        entry: poetry run pytest --cov=tests
+        entry: poetry run pytest --cov=outreach_sdk
         types: [python]
         always_run: true
         pass_filenames: false

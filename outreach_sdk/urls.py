@@ -1,0 +1,3 @@
+OUTREACH_API_BASE_URL = "https://api.outreach.io"
+OUTREACH_AUTHORIZATION_URL = f"{OUTREACH_API_BASE_URL}/oauth/authorize"
+OUTREACH_TOKEN_URL = f"{OUTREACH_API_BASE_URL}/oauth/token"
