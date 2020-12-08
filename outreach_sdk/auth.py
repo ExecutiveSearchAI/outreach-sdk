@@ -12,7 +12,18 @@ TOKEN_EXPIRY_GRACE_PERIOD = 5 * 60  # 5 minutes
 
 
 class Credentials:
-    """Credentials using OAuth2.0 access token and refresh token."""
+    """
+    Credentials using OAuth2.0 access token and refresh token.
+
+    Attributes:
+        token_uri: The Outreach API token URL.
+        client_id: The Outreach App client ID.
+        client_secret: The Outreach App client secret.
+        redirect_uri: The redirect uri used for the initial authorization grant.
+        access_token: The OAuth2.0 access_token.
+        refresh_token: The OAuth2.0 refresh token.
+        expires_at: Token expiration unix timestamp
+    """
 
     token_uri = OUTREACH_TOKEN_URL
 
@@ -27,18 +38,17 @@ class Credentials:
     ) -> None:
         """
         Args:
-          client_id (Optional(str)): The Outreach App client ID. Required for refresh. Defaults to OUTREACH_APP_ID
-              environment variable if present.
-          client_secret (Optional(str)): The Outreach App client secret. Required refresh. Defaults to
-              OUTREACH_APP_SECRET environment variable if present.
-          redirect_uri (Optional(str)): The redirect uri used for the initial authorization grant. Required and must
-              be the same as the original authorization request value to enable refresh.
-          access_token (Optional(str)): The OAuth2.0 access_token. Can be None if refresh information is provided.
-          refresh_token (Optional(str)): The OAuth2.0 refresh token. Required for refresh.
-          expires_at (Optional(int, float)): The expiry unix timestamp from the authorization request (float) or
-              the sum of the created_at unix timestamp from the refresh request (int) and the expires_in (int) seconds
-              value from the refresh request. If not provided, Credentials will be assumed to not be expired but still
-              may be invalid.
+            client_id: The Outreach App client ID. Required for refresh. Defaults to OUTREACH_APP_ID environment
+                variable if present.
+            client_secret: The Outreach App client secret. Required refresh. Defaults to OUTREACH_APP_SECRET environment
+                variable if present.
+            redirect_uri: The redirect uri used for the initial authorization grant. Required and must be the same as
+                the original authorization request value to enable refresh.
+            access_token: The OAuth2.0 access_token. Can be None if refresh information is provided.
+            refresh_token: The OAuth2.0 refresh token. Required for refresh.
+            expires_at: The expiry unix timestamp from the authorization request (float) or the sum of the created_at
+                unix timestamp from the refresh request (int) and the expires_in (int) seconds value from the refresh
+                request. If not provided, Credentials will be assumed to not be expired but still may be invalid.
         """
         self.client_id = client_id
         self.client_secret = client_secret
@@ -49,6 +59,7 @@ class Credentials:
 
     @property
     def expired(self) -> bool:
+        """Returns whether or not the credentials have expired."""
         if self.expires_at is None:
             return False
 
@@ -58,9 +69,16 @@ class Credentials:
 
     @property
     def valid(self) -> bool:
+        """Returns whether or not the credentials are valid."""
         return self.access_token is not None and not self.expired
 
     def apply(self, headers: dict) -> None:
+        """
+        Updates the given headers dictionary with the access token.
+
+        Args:
+            headers: Dictionary of session header values.
+        """
         headers.update({"Authorization": f"Bearer {self.access_token}"})
 
     def refresh(self) -> None:
@@ -99,7 +117,7 @@ class Credentials:
         Creates a dictionary representation of a Credentials object.
 
         Args:
-            strip (Optional(List[str])): List of keys to exclude from the generated dictionary.
+            strip: List of keys to exclude from the generated dictionary.
 
         Returns:
             dict: A dictionary representation of this instance.
@@ -122,7 +140,13 @@ class Credentials:
 
     def to_json(self, strip: List[str] = None) -> str:
         """
-        Creates a JSON representation of this instance using Credentials.to_dict().
+        Creates a JSON representation of this instance using :py:meth:`Credentials.to_dict`.
         Useful for storing/updating credentials in your preferred storage backend.
+
+        Args:
+            strip: List of keys to exclude from the generated dictionary.
+
+        Returns:
+            A JSON string representation of this instance.
         """
         return json.dumps(self.to_dict(strip=strip))
