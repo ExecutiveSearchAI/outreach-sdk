@@ -37,8 +37,12 @@ exclude = '''
 )
 '''
 
+[tool.coverage.paths]
+source = ["outreach_sdk"]
+
 [tool.coverage.run]
 branch = true
+source = ["outreach_sdk"]
 
 [tool.coverage.report]
 exclude_lines = [

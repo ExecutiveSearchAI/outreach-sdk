@@ -26,5 +26,11 @@ class Session:
         Initializes and ApiResource instance with the authenticated session.
         Args:
             name: The name of the API resource, e.g., prospects.
+
+        Returns:
+          An ApiResource instance.
+
+        Raises:
+          :py:class:`.resources.exceptions.ResourceNotSupportedException`: If the resource isn't supported.
         """
         return ApiResource(self._session, **load_resource_definition(name))
