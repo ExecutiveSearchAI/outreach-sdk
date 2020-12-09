@@ -1,0 +1,27 @@
+{
+  "prospects": {
+    "api_path": "prospects",
+    "attributes": {
+      "firstName": {"filterable": true, "sortable": true},
+      "lastName": {"filterable": true, "sortable": true},
+      "company": {"filterable": false, "sortable": false}
+    },
+    "relationships": [
+      {"rel_name": "account", "resource": "accounts"},
+      {"rel_name": "emailAddresses", "resource": "emailAddresses"}
+    ]
+  },
+  "accounts": {
+    "api_path": "accounts",
+    "attributes": {"name": {"filterable": true, "sortable": true}},
+    "relationships": []
+  },
+  "emailAddresses": {
+    "api_path": "emailAddresses",
+    "attributes": {
+      "email": {"filterable": true, "sortable": true},
+      "createdAt": {"filterable": false, "sortable": false}
+    },
+    "relationships": [{"rel_name": "prospect", "resource": "prospects"}]
+  }
+}

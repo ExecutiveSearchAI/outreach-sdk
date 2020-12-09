@@ -6,7 +6,7 @@ authors = ["Cuddlemuffin007 <brennonkrogers@gmail.com>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.7"
 requests = "^2.25.0"
 
 [tool.poetry.dev-dependencies]
@@ -18,13 +18,17 @@ black = "^20.8b1"
 isort = "^5.6.4"
 pre-commit = "^2.8.2"
 coverage = {version = "^5.3", extras = ["toml"]}
-typing = "^3.7.4"
+typing = {version = "^3.7.4", python = "^3.8"}
+typing-extensions = {version = "^3.7.4", python = "<3.8"}
 pytest-mypy = "^0.8.0"
 requests-mock = "^1.8.0"
+nox = "^2020.8.22"
+darglint = "^1.5.8"
+codecov = "^2.1.10"
 
 [tool.black]
 line-length = 120
-target-version = ['py38']
+target-version = ['py37', 'py38']  # no py39 yet
 exclude = '''
 
 (
@@ -32,13 +36,17 @@ exclude = '''
       \.git                # exclude a few common directories in the
     | \.mypy_cache         # root of the project
     | \.pytest_cache
-    | \.tox
+    | \.nox
   )/
 )
 '''
 
+[tool.coverage.paths]
+source = ["outreach_sdk"]
+
 [tool.coverage.run]
 branch = true
+source = ["outreach_sdk"]
 
 [tool.coverage.report]
 exclude_lines = [
