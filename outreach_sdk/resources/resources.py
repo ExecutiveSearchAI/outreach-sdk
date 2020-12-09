@@ -44,7 +44,7 @@ class ApiResource:
         """
         Args:
             session: The authenticated session.
-            url: The API path for the resource.
+            api_path: The API path for the resource.
             attributes: Mapping of the available attributes of the resource and their properties.
             relationships: List of the resource's related resources.
         """
@@ -141,7 +141,7 @@ class ApiResource:
             A JSONList or JSONDict of response data for the request action.
 
         Raises:
-            :py:class:`.exceptions.ApiError`: If the response json contains an 'error' attribute.
+            ApiError: If the response json contains an 'error' attribute.
         """
         response_json: ApiResponse = response.json()
         if "errors" in response_json:
@@ -159,13 +159,13 @@ class ApiResource:
 
         Args:
             **kwargs: Key value pairings of filter and sort parameters. These differ depending on the resource, consult
-              the `Outreach API Documentation`_ for details regarding specific resources. You can query against a
-              related resource attribute by joining the resource name and attribute with double underscores, e.g.,
-              relatedResource__attribute and providing it as a keyword argument. Sorting can be done by providing the
-              `sort` keyword argument with a value of :obj:`str` or :obj:`list` of :obj:`str` where the values are
-              resource attributes. Sorting by related resources can be achieved by joining the related resouce name and
-              attribute with a period, e.g., relatedResource.attribute. Descending sort order is also supported by
-              prefixing the attribute with a dash ("-attribute").
+                the `Outreach API Documentation`_ for details regarding specific resources. You can query against a
+                related resource attribute by joining the resource name and attribute with double underscores, e.g.,
+                relatedResource__attribute and providing it as a keyword argument. Sorting can be done by providing the
+                `sort` keyword argument with a value of :obj:`str` or :obj:`list` of :obj:`str` where the values are
+                resource attributes. Sorting by related resources can be achieved by joining the related resouce name
+                and attribute with a period, e.g., relatedResource.attribute. Descending sort order is also supported by
+                prefixing the attribute with a dash ("-attribute").
 
         Returns:
              A list of resource attribute dictionaries.

@@ -1,5 +1,10 @@
 from numbers import Number
-from typing import Dict, List, TypedDict, Union
+from typing import Dict, List, Union
+
+try:  # pragma: no cover
+    from typing import TypedDict
+except ImportError:  # pragma: no cover
+    from typing_extensions import TypedDict
 
 FilterParameterValue = Union[str, Number, List[str], List[Number]]
 FilterParameterDict = Dict[str, FilterParameterValue]

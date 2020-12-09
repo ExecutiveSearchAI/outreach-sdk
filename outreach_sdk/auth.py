@@ -86,8 +86,7 @@ class Credentials:
         Refreshes the access token.
 
         Raises:
-            outreach_sdk.exceptions.RefreshError: If the credentials could not be refreshed due to lack of information.
-            requests.exceptions.HTTPError: If the request failed for some reason.
+            TokenRefreshError: If the credentials could not be refreshed due to lack of information.
         """
         if not all([self.client_id, self.client_secret, self.redirect_uri, self.refresh_token]):
             raise TokenRefreshError(

@@ -36,7 +36,7 @@ class ApiError(Exception):
         Args:
             status_code: The HTTP response code.
             title: The error title from the response json.
-            description: The error description from the response json.
+            detail: The error detail from the response json.
         """
         message = f"{status_code} {title}\ndetail: {detail}"
         super(ApiError, self).__init__(message)

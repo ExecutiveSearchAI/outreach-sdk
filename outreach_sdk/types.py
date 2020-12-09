@@ -1,4 +1,9 @@
-from typing import Any, Dict, List, TypedDict, Union
+from typing import Any, Dict, List, Union
+
+try:  # pragma: no cover
+    from typing import TypedDict
+except ImportError:  # pragma: no cover
+    from typing_extensions import TypedDict
 
 JSONDict = Dict[str, Any]
 JSONList = List[JSONDict]

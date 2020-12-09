@@ -11,13 +11,13 @@ def resource(name: str, credentials: Credentials) -> ApiResource:
     :py:class`~outreach_sdk.resources.ApiResource`.
 
     Args:
-      name: the name of the API resource to create.
-      credentials: the OAuth2 credentials to authorize the session.
+        name: the name of the API resource to create.
+        credentials: the OAuth2 credentials to authorize the session.
 
     Returns:
-      An ApiResource instance.
+        An ApiResource instance.
 
     Raises:
-      :py:class:`.exceptions.ResourceNotSupportedException`: If the resource isn't supported.
+        :py:class:`.exceptions.ResourceNotSupportedException`: If the resource isn't supported.
     """
     return Session(credentials).resource(name)
