@@ -10,6 +10,8 @@ from typing import Any
 import nox
 from nox.sessions import Session
 
+targets = ["examples", "outreach_sdk", "tests", "noxfile.py"]
+
 
 def install_with_constraints(session: Session, *args: str, **kwargs: Any) -> None:
     """Install packages constrained by Poetry's lock file.
@@ -44,12 +46,33 @@ def install_with_constraints(session: Session, *args: str, **kwargs: Any) -> Non
 
 
 @nox.session(python=["3.9", "3.8", "3.7"])
+def lint(session: Session) -> None:
+    """Lint using Flake8"""
+    args = session.posargs or targets
+    session.run("poetry", "install", "--no-dev", external=True)
+    install_with_constraints(session, "flake8")
+    session.run("flake8", *args)
+
+
+@nox.session(python=["3.9", "3.8", "3.7"])
+def mypy(session: Session) -> None:
+    """Type-check with mypy."""
+    args = session.posargs or targets
+    install_with_constraints(session, "mypy")
+    session.run("mypy", *args)
+
+
+@nox.session(python=["3.9", "3.8", "3.7"])
 def tests(session: Session) -> None:
     """Run the test suite."""
-    args = session.posargs or ["--cov"]
     session.run("poetry", "install", "--no-dev", external=True)
-    install_with_constraints(session, "coverage[toml]", "pytest", "pytest-cov", "requests-mock")
-    session.run("pytest", *args)
+    requirements = ["pytest", "requests-mock"]
+    if "--cov" in session.posargs:
+        requirements.extend(["coverage[toml]", "pytest-cov"])
+    if session.python == "3.7":
+        requirements.append("typing-extensions")
+    install_with_constraints(session, *requirements)
+    session.run("pytest", *session.posargs)
 
 
 @nox.session(python="3.9")

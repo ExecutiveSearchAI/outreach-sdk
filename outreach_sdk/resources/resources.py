@@ -117,7 +117,7 @@ class ApiResource:
         sort_params: List[SortParam] = []
         for field in sort:
             desc = field[0] == "-"
-            sort_params.append({"field": field[1:] if desc else field, "desc": desc})
+            sort_params.append(cast(SortParam, {"field": field[1:] if desc else field, "desc": desc}))
 
         for param in sort_params:
             field = param.get("field", "")
