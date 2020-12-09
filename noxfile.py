@@ -3,6 +3,7 @@ Nox sessions.
 
 Borrowed from https://github.com/cjolowicz/hypermodern-python/blob/master/noxfile.py
 """
+import os
 import tempfile
 from typing import Any
 
@@ -25,17 +26,21 @@ def install_with_constraints(session: Session, *args: str, **kwargs: Any) -> Non
         args: Command-line arguments for pip.
         kwargs: Additional keyword arguments for Session.install.
     """
-    with tempfile.NamedTemporaryFile() as requirements:
+    # Windows gets mad if we try to write and then read before the file is closed.
+    filename = ""
+    with tempfile.NamedTemporaryFile(mode="w+t", delete=False) as requirements:
+        filename = requirements.name
         session.run(
             "poetry",
             "export",
             "--dev",
             "--format=requirements.txt",
             "--without-hashes",
-            f"--output={requirements.name}",
+            f"--output={filename}",
             external=True,
         )
-        session.install(f"--constraint={requirements.name}", *args, **kwargs)
+    session.install(f"--constraint={filename}", *args, **kwargs)
+    os.remove(filename)
 
 
 @nox.session(python=["3.9", "3.8", "3.7"])
