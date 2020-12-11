@@ -25,6 +25,8 @@ requests-mock = "^1.8.0"
 nox = "^2020.8.22"
 darglint = "^1.5.8"
 codecov = "^2.1.10"
+Sphinx = "^3.3.1"
+sphinx-autodoc-typehints = "^1.11.1"
 
 [tool.black]
 line-length = 120

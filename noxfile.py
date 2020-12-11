@@ -10,7 +10,7 @@ from typing import Any
 import nox
 from nox.sessions import Session
 
-targets = ["examples", "outreach_sdk", "tests", "noxfile.py"]
+targets = ["examples", "outreach_sdk", "tests", "noxfile.py", "docs/conf.py"]
 
 
 def install_with_constraints(session: Session, *args: str, **kwargs: Any) -> None:
@@ -81,3 +81,11 @@ def coverage(session: Session) -> None:
     install_with_constraints(session, "coverage[toml]", "codecov")
     session.run("coverage", "xml", "--fail-under=0")
     session.run("codecov", *session.posargs)
+
+
+@nox.session(python="3.9")
+def docs(session: Session) -> None:
+    """Build the documentation."""
+    session.run("poetry", "install", "--no-dev", external=True)
+    install_with_constraints(session, "sphinx", "sphinx-autodoc-typehints")
+    session.run("sphinx-build", "docs", "docs/_build")
