@@ -5,4 +5,4 @@
     license
     reference
 
-.. include:: readme.rst
+.. include:: ../README.rst
