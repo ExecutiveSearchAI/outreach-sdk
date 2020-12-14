@@ -61,7 +61,20 @@ The access token is valid for 2 hours and the refresh token is valid for 14 days
 the refesh token to issue new credentials. For more information see the `Authentication <https://api.outreach.io/api/v2/docs#authentication>`_
 section of the Outreach API docs.
 
-Examples of how you can retrieve and store your initial credentials and work with existing credentials can be found in the examples directory.
+In order to create new access credentials, you may use the `authorize.py <https://github.com/ExecutiveSearchAI/outreach-sdk/tree/main/authorize.py>`_
+helper script made available in this package.
+
+.. code-block:: shell
+
+    $ python3 authorize.py \
+    >   --client_id <CLIENT_ID> \
+    >   --client_secret <CLIENT_SECRET> \
+    >   --oauth_redirect_uri <OAUTH_REDIRECT_URI> \
+    >   --scope prospects.read \
+    >   --scope prospects.write > credentials.json
+
+To reuse existing credentials, refer to the sample script in the examples directory and implement your own read and save logic
+based on where and how your credentials are stored.
 
 Example Usage
 =============
@@ -105,3 +118,6 @@ Get a specific resource by ID.
     >>> prospects = outreach_sdk.resource("prospects", credentials)
     >>> prospects.get(1)
     {"type": "prospect", "attributes": {...}}
+
+Contributing
+============
