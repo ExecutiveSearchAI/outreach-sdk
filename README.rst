@@ -73,7 +73,8 @@ helper script made available in this package.
     >   --scope prospects.read \
     >   --scope prospects.write > credentials.json
 
-To reuse existing credentials, refer to the sample script in the examples directory and implement your own read and save logic
+To reuse existing credentials, refer to the `sample script <https://github.com/ExecutiveSearchAI/outreach-sdk/tree/main/examples/existing_credentials_example.py>`_
+in the examples directory. You may need to implement your own read and save logic
 based on where and how your credentials are stored.
 
 Example Usage
