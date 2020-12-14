@@ -16,4 +16,6 @@ jobs:
         architecture: x64
     - run: pip install nox==2020.8.22
     - run: pip install poetry==1.1.4
-    - run: nox --sessions lint mypy tests
+    - run: nox -s lint-${{matrix.python-version}}
+    - run: nox -s mypy-${{matrix.python-version}}
+    - run: nox -s tests-${{matrix.python-version}}
