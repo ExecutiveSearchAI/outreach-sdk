@@ -16,9 +16,12 @@ class ApiResource:
 
     Attributes
     ----------
-    api_endpoint: The base url of the Outreach API.
-    pagination: Dictionary containing default pagination settings.
-    url: The constructed resource endpoint.
+    api_endpoint: str
+        The base url of the Outreach API.
+    pagination: dict
+        Dictionary containing default pagination settings.
+    url: str
+        The constructed resource endpoint.
 
     Methods
     -------
@@ -178,20 +181,25 @@ class ApiResource:
                 is not sortable.
 
         Examples:
-            # Create a prospects resource and filter by attribute
+            Create a prospects resource and filter by attribute
+
             >>> prospects = outreach_sdk.resource("prospects", credentials)
             >>> list_result = prospects.list(email="email@example.com")
 
-            # Sorting the results by attribute
+            Sorting the results by attribute
+
             >>> sorted_list_result = prospects.list(sort=['firstName'])
 
-            # Sort by descending
+            Sort by descending
+
             >>> sorted_list_result = prospects.list(sort=['-firstName'])
 
-            # Filtering against a related resource attribute
+            Filtering against a related resource attribute
+
             >>> result = prospects.list(emailAddresses__email="email@example.com")
 
-            # Sort by related resource attribute
+            Sort by related resource attribute
+
             >>> sorted_list_result = prospects.list(sort=['emailAddresses.email'])
 
         .. _Outreach API Documentation:

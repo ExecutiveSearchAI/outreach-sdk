@@ -26,7 +26,7 @@ def read_credentials_from_file(filepath: str) -> Credentials:
 
 def save_credentials_to_file(filepath: str, credentials: Credentials) -> None:
     # In this example, we are demonstrating the use of the strip argument to remove any values that we may not want to
-    # store along with our credetials. In this case client id, client secret, and redirect uri are made available in
+    # store along with our credentials. In this case client id, client secret, and redirect uri are made available in
     # environment variables.
     with open(filepath, "w", encoding="utf-8") as json_file:
         json_file.write(credentials.to_json(strip=["client_id", "client_secret", "redirect_uri"]))
