@@ -27,7 +27,14 @@ class ApiResource:
     -------
     list(**kwargs):
         Queries the API for a list of resources. Filter and sort parameters can be provided as kwargs according
-        to the resource's filterable and sortable attributes and relationships.
+        to the resource's filterable and sortable attributes and relationships. These differ depending on the resource,
+        consult the `Outreach API Documentation <https://api.outreach.io/api/v2/docs#api-reference>`_ for details
+        regarding specific resources. You can query against a related resource attribute by joining the resource name
+        and attribute with double underscores, e.g., relatedResource__attribute and providing it as a keyword argument.
+        Sorting can be done by providing the `sort` keyword argument with a value of :py:obj:`str` or :py:obj:`list` of
+        :py:obj:`str` where the values are resource attributes. Sorting by related resources can be achieved by joining
+        the related resouce name and attribute with a period, e.g., relatedResource.attribute. Descending sort order is
+        also supported by prefixing the attribute with a dash ("-attribute").
     get(resource_id: int):
         Gets a single resource by ID.
     """
@@ -161,14 +168,7 @@ class ApiResource:
         Returns a list of resources filtered and sorted according to the provided keyword arguments.
 
         Args:
-            **kwargs: Key value pairings of filter and sort parameters. These differ depending on the resource, consult
-                the `Outreach API Documentation`_ for details regarding specific resources. You can query against a
-                related resource attribute by joining the resource name and attribute with double underscores, e.g.,
-                relatedResource__attribute and providing it as a keyword argument. Sorting can be done by providing the
-                `sort` keyword argument with a value of :obj:`str` or :obj:`list` of :obj:`str` where the values are
-                resource attributes. Sorting by related resources can be achieved by joining the related resouce name
-                and attribute with a period, e.g., relatedResource.attribute. Descending sort order is also supported by
-                prefixing the attribute with a dash ("-attribute").
+            **kwargs: Key value pairings of filter and sort parameters.
 
         Returns:
              A list of resource attribute dictionaries.
@@ -202,8 +202,6 @@ class ApiResource:
 
             >>> sorted_list_result = prospects.list(sort=['emailAddresses.email'])
 
-        .. _Outreach API Documentation:
-            https://api.outreach.io/api/v2/docs#api-reference
         """
         sort: Union[List[str], str] = kwargs.pop("sort", [])  # type: ignore
         query_params = self._build_filter_params(kwargs)
