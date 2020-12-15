@@ -1,8 +1,15 @@
-__version__ = "0.1.0"
+try:
+    from importlib.metadata import PackageNotFoundError, version  # type: ignore
+except ImportError:  # pragma: no cover
+    from importlib_metadata import PackageNotFoundError, version  # type: ignore
+
+try:
+    __version__ = version(__name__)
+except PackageNotFoundError:  # pragma: no cover
+    __version__ = "unknown"
 
 from .auth import Credentials
 from .resources import ApiResource
-from .session import Session
 
 
 def resource(name: str, credentials: Credentials) -> ApiResource:
@@ -20,4 +27,6 @@ def resource(name: str, credentials: Credentials) -> ApiResource:
     Raises:
         :py:class:`.exceptions.ResourceNotSupportedException`: If the resource isn't supported.
     """
+    from .session import Session
+
     return Session(credentials).resource(name)

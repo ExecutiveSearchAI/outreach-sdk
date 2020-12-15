@@ -1,0 +1,8 @@
+div.sphinxsidebar a,
+a.reference {
+  border-bottom: none;
+}
+
+div.footer a {
+  text-decoration: none;
+}
