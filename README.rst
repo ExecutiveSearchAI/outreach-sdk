@@ -108,7 +108,10 @@ List resources applying optional filter and sort options.
     >>>
     >>> prospects = outreach_sdk.resource("prospects", credentials)
     >>> prospects.list(firstName="John", sort="-lastName")
-    [{"type": "prospect", "attributes": {...}}, {"type": "prospect", "attributes": {...}}]
+    [
+       {"type": "prospect", "id": 1, "attributes": {"firstName": "John", ...}, "relationships": {...}},
+       {"type": "prospect", "id": 5, "attributes": {"firstName": "John", ...}, "relationships": {...}}
+    ]
 
 Get
 ---
@@ -118,7 +121,7 @@ Get a specific resource by ID.
 
     >>> prospects = outreach_sdk.resource("prospects", credentials)
     >>> prospects.get(1)
-    {"type": "prospect", "attributes": {...}}
+    {"type": "prospect", "id": 1, "attributes": {...}, "relationships": {...}}
 
 Contributing
 ============

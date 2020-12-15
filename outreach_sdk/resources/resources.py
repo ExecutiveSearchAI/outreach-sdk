@@ -22,6 +22,8 @@ class ApiResource:
         Dictionary containing default pagination settings.
     url: str
         The constructed resource endpoint.
+    resource_type: str
+        The API resource type.
 
     Methods
     -------
@@ -48,6 +50,7 @@ class ApiResource:
         self,
         session: requests.Session,
         api_path: str,
+        resource_type: str,
         attributes: ResourceAttributes,
         relationships: ResourceRelationships,
     ):
@@ -55,11 +58,13 @@ class ApiResource:
         Args:
             session: The authenticated session.
             api_path: The API path for the resource.
+            resource_type: The API resource type.
             attributes: Mapping of the available attributes of the resource and their properties.
             relationships: List of the resource's related resources.
         """
         self.session = session
         self.url = f"{self.api_endpoint}/{api_path}"
+        self.resource_type = resource_type
         self._attributes = attributes
         self._relationships = relationships
 

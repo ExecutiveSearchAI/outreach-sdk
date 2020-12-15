@@ -12,6 +12,7 @@ FilterParameterDict = Dict[str, FilterParameterValue]
 
 class ResourceAttributeProps(TypedDict):
     filterable: bool
+    readonly: bool
     sortable: bool
 
 
@@ -28,6 +29,7 @@ class ResourceDefinitionProps(TypedDict):
     api_path: str
     attributes: ResourceAttributes
     relationships: ResourceRelationships
+    resource_type: str
 
 
 ResourceDefinition = Dict[str, ResourceDefinitionProps]
