@@ -6,7 +6,8 @@
       "timestamp": {"filterable": true, "readonly": true, "sortable": true},
       "userEmail": {"filterable": false, "readonly": true, "sortable": false}
     },
-    "relationships": []
+    "relationships": [],
+    "resource_type": "audit"
   },
   "accounts": {
     "api_path": "accounts",
@@ -155,7 +156,8 @@
       "updatedAt": {"filterable": true, "readonly": true, "sortable": true},
       "websiteUrl": {"filterable": false, "readonly": false, "sortable": false}
     },
-    "relationships": []
+    "relationships": [{"rel_name": "owner", "resource": "users"}],
+    "resource_type": "account"
   },
   "emailAddresses": {
     "api_path": "emailAddresses",
@@ -170,7 +172,8 @@
       "unsubscribedAt": {"filterable": true, "readonly": true, "sortable": true},
       "updatedAt": {"filterable": false, "readonly": true, "sortable": false}
     },
-    "relationships": [{"rel_name": "prospect", "resource": "prospects"}]
+    "relationships": [{"rel_name": "prospect", "resource": "prospects"}],
+    "resource_type": "emailAddress"
   },
   "prospects": {
     "api_path": "prospects",
@@ -389,7 +392,75 @@
     },
     "relationships": [
       {"rel_name": "account", "resource": "accounts"},
-      {"rel_name": "emailAddresses", "resource": "emailAddresses"}
-    ]
+      {"rel_name": "emailAddresses", "resource": "emailAddresses"},
+      {"rel_name": "owner", "resource": "users"}
+    ],
+    "resource_type": "prospect"
+  },
+  "users": {
+    "api_path": "users",
+    "attributes": {
+      "accountsViewId": {"filterable": false, "readonly": false, "sortable": false},
+      "activityNotificationsDisabled": {"filterable": false, "readonly": false, "sortable": false},
+      "bounceWarninEmailDisabled": {"filterable": false, "readonly": false, "sortable": false},
+      "bridgePhone": {"filterable": false, "readonly": false, "sortable": false},
+      "bridgePhoneExtension": {"filterable": false, "readonly": false, "sortable": false},
+      "controlledTabDefault": {"filterable": false, "readonly": false, "sortable": false},
+      "createdAt": {"filterable": true, "readonly": true, "sortable": true},
+      "currentSignInAt": {"filterable": false, "readonly": true, "sortable": false},
+      "custom1": {"filterable": false, "readonly": false, "sortable": false},
+      "custom2": {"filterable": false, "readonly": false, "sortable": false},
+      "custom3": {"filterable": false, "readonly": false, "sortable": false},
+      "custom4": {"filterable": false, "readonly": false, "sortable": false},
+      "custom5": {"filterable": false, "readonly": false, "sortable": false},
+      "dailyDigestEmailEnabled": {"filterable": false, "readonly": false, "sortable": false},
+      "duties": {"filterable": false, "readonly": false, "sortable": false},
+      "dutiesSetAt": {"filterable": false, "readonly": false, "sortable": false},
+      "email": {"filterable": true, "readonly": false, "sortable": true},
+      "emailVoiceRecordings": {"filterable": false, "readonly": false, "sortable": false},
+      "firstName": {"filterable": true, "readonly": false, "sortable": true},
+      "inboundBridgePhone": {"filterable": false, "readonly": false, "sortable": false},
+      "inboundBridgePhoneExtension": {"filterable": false, "readonly": false, "sortable": false},
+      "inboundCallBehavior": {"filterable": false, "readonly": false, "sortable": false},
+      "inboundPhoneType": {"filterable": false, "readonly": false, "sortable": false},
+      "inboundVoicemailCustomMessageText": {"filterable": false, "readonly": false, "sortable": false},
+      "inboundVoicemailMessageTextVoice": {"filterable": false, "readonly": false, "sortable": false},
+      "inboundVoicemailPromptType": {"filterable": false, "readonly": false, "sortable": false},
+      "keepBridgePhoneConnected": {"filterable": false, "readonly": false, "sortable": false},
+      "lastName": {"filterable": true, "readonly": false, "sortable": true},
+      "lastSignInAt": {"filterable": false, "readonly": true, "sortable": false},
+      "locked": {"filterable": true, "readonly": false, "sortable": false},
+      "mailboxErrorEmailEnabled": {"filterable": false, "readonly": false, "sortable": false},
+      "name": {"filterable": false, "readonly": true, "sortable": false},
+      "notificationsEnabled": {"filterable": false, "readonly": false, "sortable": false},
+      "oceClickToDialEverywhere": {"filterable": false, "readonly": false, "sortable": false},
+      "oceGmailToolbar": {"filterable": false, "readonly": false, "sortable": false},
+      "oceGmailTrackingState": {"filterable": false, "readonly": false, "sortable": false},
+      "oceSalesforceEmailDecorating": {"filterable": false, "readonly": false, "sortable": false},
+      "oceSalesforcePhoneDecorating": {"filterable": false, "readonly": false, "sortable": false},
+      "oceUniversalTaskFlow": {"filterable": false, "readonly": false, "sortable": false},
+      "oceWindowMode": {"filterable": false, "readonly": false, "sortable": false},
+      "onboardedAt": {"filterable": false, "readonly": false, "sortable": false},
+      "opportunitiesViewId": {"filterable": false, "readonly": false, "sortable": false},
+      "passwordExpiresAt": {"filterable": false, "readonly": true, "sortable": false},
+      "phoneCountryCode": {"filterable": false, "readonly": false, "sortable": false},
+      "phoneNumber": {"filterable": false, "readonly": false, "sortable": false},
+      "phoneType": {"filterable": false, "readonly": false, "sortable": false},
+      "preferredVoiceRegion": {"filterable": false, "readonly": false, "sortable": false},
+      "prefersLocalPresence": {"filterable": false, "readonly": false, "sortable": false},
+      "prospectsViewId": {"filterable": false, "readonly": false, "sortable": false},
+      "reportsViewId": {"filterable": false, "readonly": false, "sortable": false},
+      "scimExternalId": {"filterable": false, "readonly": false, "sortable": false},
+      "scimSource": {"filterable": false, "readonly": false, "sortable": false},
+      "senderNotificationsExcluded": {"filterable": false, "readonly": false, "sortable": false},
+      "textingEmailNotifications": {"filterable": false, "readonly": false, "sortable": false},
+      "title": {"filterable": false, "readonly": false, "sortable": false},
+      "unknownReplyEmailEnabled": {"filterable": false, "readonly": false, "sortable": false},
+      "updatedAt": {"filterable": true, "readonly": true, "sortable": true},
+      "username": {"filterable": true, "readonly": false, "sortable": true},
+      "weeklyDigestEmailEnabled": {"filterable": false, "readonly": false, "sortable": false}
+    },
+    "relationships": [],
+    "resource_type": "user"
   }
 }

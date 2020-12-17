@@ -6,12 +6,14 @@ try:  # pragma: no cover
 except ImportError:  # pragma: no cover
     from typing_extensions import TypedDict
 
+
 FilterParameterValue = Union[str, Number, List[str], List[Number]]
 FilterParameterDict = Dict[str, FilterParameterValue]
 
 
 class ResourceAttributeProps(TypedDict):
     filterable: bool
+    readonly: bool
     sortable: bool
 
 
@@ -28,6 +30,7 @@ class ResourceDefinitionProps(TypedDict):
     api_path: str
     attributes: ResourceAttributes
     relationships: ResourceRelationships
+    resource_type: str
 
 
 ResourceDefinition = Dict[str, ResourceDefinitionProps]
