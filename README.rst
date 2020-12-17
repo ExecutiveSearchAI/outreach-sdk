@@ -108,10 +108,12 @@ List resources applying optional filter and sort options.
     >>>
     >>> prospects = outreach_sdk.resource("prospects", credentials)
     >>> prospects.list(firstName="John", sort="-lastName")
-    [
-       {"type": "prospect", "id": 1, "attributes": {"firstName": "John", ...}, "relationships": {...}},
-       {"type": "prospect", "id": 5, "attributes": {"firstName": "John", ...}, "relationships": {...}}
-    ]
+    {
+       "data": [
+          {"type": "prospect", "id": 1, "attributes": {"firstName": "John", ...}, "relationships": {...}},
+          {"type": "prospect", "id": 5, "attributes": {"firstName": "John", ...}, "relationships": {...}}
+       ]
+    }
 
 Get
 ---
@@ -121,7 +123,44 @@ Get a specific resource by ID.
 
     >>> prospects = outreach_sdk.resource("prospects", credentials)
     >>> prospects.get(1)
-    {"type": "prospect", "id": 1, "attributes": {...}, "relationships": {...}}
+    {"data": {"type": "prospect", "id": 1, "attributes": {...}}}
+
+You can also request related resources. This will return all data associated with the resources.
+
+.. code-block:: python
+
+    >>> prospects = outreach_sdk.resource("prospects", credentials)
+    >>> prospects.get(1, include=["owner"])
+    {
+       "data": {"type": "prospect", "id": 1, "attributes": {...}},
+       "included": [{"type": "user", "id": 1, "attributes": {...}}]
+    }
+
+When you only need specific data points, you can specify sparse fieldsets to be returned.
+
+.. code-block:: python
+
+    >>> prospects = outreach_sdk.resource("prospects", credentials)
+    >>> prospects.get(1, include=["account"], fields=["firstName", "lastName", "account.name"])
+    {
+       "data": {"type": "prospect", "id": 1, "attributes": {"firstName": "John", "lastName": "Doe"}},
+       "included": [{"type": "account", "id": 1, "attributes": {"name": "Acme"}}]
+    }
+
+You may also include a relationship's related resource as well.
+NOTE: This doesn't seem to work in the API right now.
+
+.. code-block:: python
+
+    >>> prospects = outreach_sdk.resource("prospects", credentials)
+    >>> prospects.get(1, include=["account.owner"])
+    {
+       "data": {"type": "prospect", "id": 1, "attributes": {...}},
+       "included": [
+          {"type": "account", "id": 1, "attributes": {...}},
+          {"type": "user", "id": 1, "attributes": {...}}
+       ]
+    }
 
 Contributing
 ============

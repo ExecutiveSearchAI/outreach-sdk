@@ -12,7 +12,7 @@ def test_create_resource(creds):
     assert resource.session.headers["User-Agent"] == "Outreach SDK Python/0.1.0"
     assert resource.session.headers["Content-Type"] == "application/vnd.api+json"
     assert resource.session.headers["Authorization"] == "Bearer access_token"
-    assert resource.filter_fields == [
+    assert resource.filter_fields == {
         "createdAt",
         "emails",
         "engagedAt",
@@ -50,8 +50,8 @@ def test_create_resource(creds):
         "owner.locked",
         "owner.updatedAt",
         "owner.username",
-    ]
-    assert resource.sort_fields == [
+    }
+    assert resource.sort_fields == {
         "createdAt",
         "engagedAt",
         "engagedScore",
@@ -87,7 +87,7 @@ def test_create_resource(creds):
         "owner.lastName",
         "owner.updatedAt",
         "owner.username",
-    ]
+    }
 
 
 def test_non_existing_resource(creds):

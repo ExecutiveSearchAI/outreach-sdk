@@ -1,12 +1,25 @@
-from typing import Dict, List, Optional, Union, cast
+from typing import Dict, List, MutableSet, Optional, Union, cast
 
 import requests
 
-from outreach_sdk.types import ApiErrorResponse, ApiResponse, ApiSuccessResponse, JSONDict, JSONList
+from outreach_sdk.types import ApiResponse
 from outreach_sdk.urls import OUTREACH_API_URL
 
-from .exceptions import ApiError, InvalidFilterParameterError, InvalidSortParameterError
-from .types import FilterParameterDict, FilterParameterValue, ResourceAttributes, ResourceRelationships, SortParam
+from .exceptions import (
+    InvalidFilterParameterError,
+    InvalidSortParameterError,
+    NoRelatedResourceException,
+    RelatedResourceNotIncludedException,
+)
+from .types import (
+    FilterParameterDict,
+    FilterParameterValue,
+    ResourceAttributes,
+    ResourceDefinitionProps,
+    ResourceRelationshipProps,
+    ResourceRelationships,
+    SortParam,
+)
 from .util import load_resource_definition
 
 
@@ -37,14 +50,15 @@ class ApiResource:
         :py:obj:`str` where the values are resource attributes. Sorting by related resources can be achieved by joining
         the related resouce name and attribute with a period, e.g., relatedResource.attribute. Descending sort order is
         also supported by prefixing the attribute with a dash ("-attribute").
-    get(resource_id: int):
-        Gets a single resource by ID.
+    get(resource_id: int, include: List[str], fields: List[str]):
+        Gets a single resource by ID. Optionally, one may include related resources and sparse fieldsets to return by
+        way of the include and `fields` arguments.
     """
 
     api_endpoint: str = OUTREACH_API_URL
     pagination: dict = {"size": 50, "count": False, "limit": 0}
-    _filter_fields: Optional[List[str]] = None
-    _sort_fields: Optional[List[str]] = None
+    _filter_fields: Optional[MutableSet[str]] = None
+    _sort_fields: Optional[MutableSet[str]] = None
 
     def __init__(
         self,
@@ -69,13 +83,13 @@ class ApiResource:
         self._relationships = relationships
 
     @property
-    def filter_fields(self) -> List[str]:
+    def filter_fields(self) -> MutableSet[str]:
         """A list of filterable resource attributes"""
         if self._filter_fields is None:
-            self._filter_fields = []
+            self._filter_fields = set()
             for attr, options in self._attributes.items():
                 if options.get("filterable"):
-                    self._filter_fields.append(attr)
+                    self._filter_fields.add(attr)
 
             for relation in self._relationships:
                 rel_name = relation.get("rel_name", "")
@@ -83,18 +97,18 @@ class ApiResource:
                 rel_def = load_resource_definition(resource)
                 for attr, options in rel_def.get("attributes", {}).items():
                     if options.get("filterable"):
-                        self._filter_fields.append(f"{rel_name}.{attr}")
+                        self._filter_fields.add(f"{rel_name}.{attr}")
 
         return self._filter_fields
 
     @property
-    def sort_fields(self) -> List[str]:
+    def sort_fields(self) -> MutableSet[str]:
         """A list of sortable resource attributes"""
         if self._sort_fields is None:
-            self._sort_fields = []
+            self._sort_fields = set()
             for attr, options in self._attributes.items():
                 if options.get("sortable"):
-                    self._sort_fields.append(attr)
+                    self._sort_fields.add(attr)
 
             for relation in self._relationships:
                 rel_name = relation.get("rel_name", "")
@@ -102,7 +116,7 @@ class ApiResource:
                 rel_def = load_resource_definition(resource)
                 for attr, options in rel_def.get("attributes", {}).items():
                     if options.get("sortable"):
-                        self.sort_fields.append(f"{rel_name}.{attr}")
+                        self._sort_fields.add(f"{rel_name}.{attr}")
 
         return self._sort_fields
 
@@ -145,30 +159,47 @@ class ApiResource:
             )
         }
 
-    def _check_response(self, response: requests.Response) -> Union[JSONList, JSONDict]:
-        """
-        Determine if a response is successful or not and behave accordingly.
+    def _build_query_params(self, included: List[str], fields: List[str]) -> Dict[str, str]:
+        for rel in included:
+            # Test that the relationship exist. API seems to ignore nested relationships in included in spite of what
+            # the docs say, so for now I'm ignoring them too.
+            self._get_related_resource_props(rel.split(".")[0])
 
-        Args:
-            response: The response object from the API.
+        params = {"include": ",".join(included)}
 
-        Returns:
-            A JSONList or JSONDict of response data for the request action.
+        for field in fields:
+            parts = field.split(".")
+            if len(parts) > 1:
+                rel_name, attr = parts[:2]
+                if rel_name not in included:
+                    raise RelatedResourceNotIncludedException(
+                        "To request fields for a related resource it must also be included."
+                    )
+                related_resource_type = self._get_related_resource_definition(rel_name).get("resource_type")
+            else:
+                related_resource_type, attr = self.resource_type, parts[0]
 
-        Raises:
-            ApiError: If the response json contains an 'error' attribute.
-        """
-        response_json: ApiResponse = response.json()
-        if "errors" in response_json:
-            response_json = cast(ApiErrorResponse, response_json)
-            error = response_json.get("errors", [])[0]
-            raise ApiError(response.status_code, error.get("title", ""), error.get("detail", ""))
+            qs_key = f"fields[{related_resource_type}]"
+            if qs_key in params:
+                params[qs_key] += f",{attr}"
+            else:
+                params[qs_key] = attr
+
+        return params
+
+    def _get_related_resource_definition(self, relationship_name: str) -> ResourceDefinitionProps:
+        props = self._get_related_resource_props(relationship_name)
+        return load_resource_definition(cast(str, props.get("resource")))
+
+    def _get_related_resource_props(self, relationship_name: str) -> ResourceRelationshipProps:
+        try:
+            props = next(relation for relation in self._relationships if relation.get("rel_name") == relationship_name)
+        except StopIteration:
+            raise NoRelatedResourceException(self.resource_type, relationship_name)
         else:
-            response_json = cast(ApiSuccessResponse, response_json)
+            return props
 
-        return cast(Union[JSONList, JSONDict], response_json.get("data"))
-
-    def list(self, **kwargs: FilterParameterValue) -> JSONList:
+    def list(self, **kwargs: FilterParameterValue) -> ApiResponse:
         """
         Returns a list of resources filtered and sorted according to the provided keyword arguments.
 
@@ -179,7 +210,6 @@ class ApiResource:
              A list of resource attribute dictionaries.
 
         Raises:
-            :py:class:`.exceptions.ApiError`: If the response json contains an 'error' attribute.
             :py:class:`.exceptions.InvalidFilterParameterError`: If the resource or related resource attribute
                 is not filterable.
             :py:class:`.exceptions.InvalidSortParameterError`: If the resource or related resource attribute
@@ -213,24 +243,38 @@ class ApiResource:
         query_params.update(self._build_sort_params(sort))
 
         response = self.session.get(self.url, params=query_params)
-        return cast(JSONList, self._check_response(response))
+        return response.json()
 
-    def get(self, resource_id: int) -> JSONDict:
+    def get(self, resource_id: int, include: List[str] = [], fields: List[str] = []) -> ApiResponse:
         """
         Gets a specific resource by id.
 
         Args:
             resource_id: The id of the resource to fetch.
+            include: List of related resources to return with the resource.
+            fields: List of specific field values to return for the resource and/or relationships.
 
         Returns:
             A dictionary of resource attributes.
 
-        Raises:
-            :py:class:`.exceptions.ApiError`: If the response json contains an 'error' attribute.
-
         Examples:
             >>> prospects = outreach_sdk.resource("prospects", credentials)
-            >>> result = prospects.get(1)
+            >>> result = prospects.get(1, include=["owner"], fields=["firstName", "lastName", "owner.email"])
         """
-        response = self.session.get(f"{self.url}/{resource_id}")
-        return cast(JSONDict, self._check_response(response))
+
+        query_params = self._build_query_params(include, fields)
+        response = self.session.get(f"{self.url}/{resource_id}", params=query_params)
+        return response.json()
+
+    def update(self, resource_id: int, **kwargs: FilterParameterValue) -> None:
+        # check kwargs are updatable fields
+        # query for resource including relevant relationships if a relationship update is requested
+        # generate relationships dicts if necessary
+        #   - load related resource definitions to get resource type
+        #   - determine the related resource id -> create new ApiResource and list?
+        #   - add data and attributes
+        # generate attribute dict
+        pass
+
+    def _get(self, url: str) -> ApiResponse:
+        return self.session.get(url).json()

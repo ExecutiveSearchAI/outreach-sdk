@@ -2,6 +2,7 @@ import datetime
 
 import pytest
 
+import outreach_sdk
 from outreach_sdk.auth import Credentials
 
 MOCK_NOW = datetime.datetime.fromisoformat("2020-07-01T12:00:00+00:00")
@@ -41,3 +42,9 @@ def creds():
         return Credentials(**defaults)
 
     return _creds
+
+
+@pytest.fixture
+def prospects(creds):
+    credentials = creds()
+    return outreach_sdk.resource("prospects", credentials)

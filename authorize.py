@@ -43,13 +43,13 @@ def run_local_flow(client_id: str, client_secret: str, redirect_uri: str, scopes
         # we are writing the credentials by redirecting stdout to file
         stdout = sys.stdout
         sys.stdout = sys.stderr
-        redirect_uri = input(
+        redirected = input(
             f"Go to {auth_request.url} and authorize access.\nEnter the full url to which you were redirected:\n>>"
         )
     finally:
         sys.stdout = stdout
 
-    query = urlsplit(redirect_uri).query
+    query = urlsplit(redirected).query
     code = parse_qs(query).get("code", [])[0]
 
     # exchange code from redirect for auth token
@@ -87,7 +87,7 @@ if __name__ == "__main__":
         "--client_secret", action=EnvVar, envvar="OUTREACH_APP_SECRET", help="The Outreach API client app secret."
     )
     parser.add_argument(
-        "--oauth_redirect_url",
+        "--oauth_redirect_uri",
         action=EnvVar,
         envvar="OUTREACH_OAUTH_REDIRECT_URI",
         help="The oauth redirect url for your app.",
