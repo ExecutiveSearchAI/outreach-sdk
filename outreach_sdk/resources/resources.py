@@ -2,13 +2,14 @@ from typing import Dict, List, MutableSet, Optional, Union, cast
 
 import requests
 
-from outreach_sdk.types import ApiResponse
+from outreach_sdk.types import ApiResponse, JSONDict
 from outreach_sdk.urls import OUTREACH_API_URL
 
 from .exceptions import (
     InvalidFilterParameterError,
     InvalidSortParameterError,
     NoRelatedResourceException,
+    ReadonlyAttributeUpdateException,
     RelatedResourceNotIncludedException,
 )
 from .types import (
@@ -58,6 +59,7 @@ class ApiResource:
     api_endpoint: str = OUTREACH_API_URL
     pagination: dict = {"size": 50, "count": False, "limit": 0}
     _filter_fields: Optional[MutableSet[str]] = None
+    _readonly_fields: Optional[MutableSet[str]] = None
     _sort_fields: Optional[MutableSet[str]] = None
 
     def __init__(
@@ -84,7 +86,7 @@ class ApiResource:
 
     @property
     def filter_fields(self) -> MutableSet[str]:
-        """A list of filterable resource attributes"""
+        """A set of filterable resource attributes."""
         if self._filter_fields is None:
             self._filter_fields = set()
             for attr, options in self._attributes.items():
@@ -102,8 +104,27 @@ class ApiResource:
         return self._filter_fields
 
     @property
+    def readonly_fields(self) -> MutableSet[str]:
+        """A set of readonly fields for this resource."""
+        if self._readonly_fields is None:
+            self._readonly_fields = set()
+            for attr, options in self._attributes.items():
+                if options.get("readonly"):
+                    self._readonly_fields.add(attr)
+
+            for relation in self._relationships:
+                rel_name = relation.get("rel_name", "")
+                resource = relation.get("resource", "")
+                rel_def = load_resource_definition(resource)
+                for attr, options in rel_def.get("attributes", {}).items():
+                    if options.get("readonly"):
+                        self._readonly_fields.add(f"{rel_name}.{attr}")
+
+        return self._readonly_fields
+
+    @property
     def sort_fields(self) -> MutableSet[str]:
-        """A list of sortable resource attributes"""
+        """A set of sortable resource attributes."""
         if self._sort_fields is None:
             self._sort_fields = set()
             for attr, options in self._attributes.items():
@@ -245,7 +266,7 @@ class ApiResource:
         response = self.session.get(self.url, params=query_params)
         return response.json()
 
-    def get(self, resource_id: int, include: List[str] = [], fields: List[str] = []) -> ApiResponse:
+    def get(self, resource_id: int, include: List[str] = [], fields: List[str] = []) -> JSONDict:
         """
         Gets a specific resource by id.
 
@@ -255,7 +276,7 @@ class ApiResource:
             fields: List of specific field values to return for the resource and/or relationships.
 
         Returns:
-            A dictionary of resource attributes.
+            An API response containing a top-level data attribute with the resource data dictionary.
 
         Examples:
             >>> prospects = outreach_sdk.resource("prospects", credentials)
@@ -266,15 +287,31 @@ class ApiResource:
         response = self.session.get(f"{self.url}/{resource_id}", params=query_params)
         return response.json()
 
-    def update(self, resource_id: int, **kwargs: FilterParameterValue) -> None:
-        # check kwargs are updatable fields
-        # query for resource including relevant relationships if a relationship update is requested
-        # generate relationships dicts if necessary
-        #   - load related resource definitions to get resource type
-        #   - determine the related resource id -> create new ApiResource and list?
-        #   - add data and attributes
-        # generate attribute dict
-        pass
+    def update(self, resource_id: int, attributes: JSONDict = {}) -> JSONDict:
+        """
+        Update the resource specified by resource_id.
 
-    def _get(self, url: str) -> ApiResponse:
-        return self.session.get(url).json()
+        Args:
+            resource_id: The id of the resource to fetch.
+            attributes: Dictionary of attribute keys and values with which to update.
+
+        Returns:
+            An API response including the new values for the updated attributes and relationships.
+
+        Raises:
+            ReadonlyAttributeUpdateException: If an attribute provided for update is readonly.
+        """
+        # TODO: implement updates for related resource attributes
+        # check attributes are updatable fields
+        for field in attributes.keys():
+            if field in self.readonly_fields:
+                raise ReadonlyAttributeUpdateException(field, self.resource_type)
+
+        data = {
+            "type": f"{self.resource_type}",
+            "id": resource_id,
+            "attributes": attributes,
+        }
+
+        response = self.session.patch(f"{self.url}/{resource_id}", json={"data": data})
+        return response.json()

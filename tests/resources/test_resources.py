@@ -4,6 +4,7 @@ from outreach_sdk.resources.exceptions import (
     InvalidFilterParameterError,
     InvalidSortParameterError,
     NoRelatedResourceException,
+    ReadonlyAttributeUpdateException,
     RelatedResourceNotIncludedException,
 )
 
@@ -103,3 +104,17 @@ def test_get_resource_with_sparce_fieldset_without_including_relationship(prospe
         prospects.get(1, [], ["owner.name"])
 
     assert str(excinfo.value) == "To request fields for a related resource it must also be included."
+
+
+def test_update_resource(requests_mock, prospects):
+    requests_mock.patch("https://api.outreach.io/api/v2/prospects/1", json={})
+    prospects.update(1, attributes={"tags": ["Tag 1", "Tag 2"]})
+
+    assert requests_mock.last_request.json() == {
+        "data": {"type": "prospect", "id": 1, "attributes": {"tags": ["Tag 1", "Tag 2"]}}
+    }
+
+
+def test_update_resource_readonly_field(requests_mock, prospects):
+    with pytest.raises(ReadonlyAttributeUpdateException):
+        prospects.update(1, attributes={"lastName": "Bond", "name": "James Bond"})
