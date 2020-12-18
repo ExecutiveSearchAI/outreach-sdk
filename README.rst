@@ -162,5 +162,15 @@ NOTE: This doesn't seem to work in the API right now.
        ]
     }
 
+Update
+------
+Update a resources attributes.
+
+.. code-block:: python
+
+    >>> prospects = outreach_sdk.resource("prospects", credentials)
+    >>> prospects.update(1, attributes={"tags": ["Tag 1", "Tag 2"]})
+    {"data": {"type": "prospect", "id": 1, "attributes": {"tags": ["Tag 1", "Tag 2"]}}}
+
 Contributing
 ============
