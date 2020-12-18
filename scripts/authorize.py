@@ -78,7 +78,7 @@ def run_local_flow(client_id: str, client_secret: str, redirect_uri: str, scopes
     )
 
 
-if __name__ == "__main__":
+def main() -> None:
     parser = argparse.ArgumentParser(
         description="Issue new OAuth credentials for OutreachAPI access.", fromfile_prefix_chars="@"
     )
@@ -119,3 +119,7 @@ if __name__ == "__main__":
     credentials = run_local_flow(args.client_id, args.client_secret, args.oauth_redirect_uri, args.scopes)
     with args.out as credentials_file:
         credentials_file.write(credentials.to_json())
+
+
+if __name__ == "__main__":
+    main()
