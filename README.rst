@@ -66,7 +66,7 @@ helper script made available in this package.
 
 .. code-block:: shell
 
-    $ python3 authorize.py \
+    $ authorize \
     >   --client_id <CLIENT_ID> \
     >   --client_secret <CLIENT_SECRET> \
     >   --oauth_redirect_uri <OAUTH_REDIRECT_URI> \
