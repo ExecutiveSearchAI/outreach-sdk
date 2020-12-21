@@ -8,8 +8,7 @@ from urllib.parse import parse_qs, urlsplit
 
 from requests import Request, Session
 
-from outreach_sdk.auth import Credentials
-from outreach_sdk.urls import OUTREACH_AUTHORIZATION_URL, OUTREACH_TOKEN_URL
+from .. import auth, urls
 
 
 class EnvVar(argparse.Action):
@@ -29,7 +28,7 @@ class EnvVar(argparse.Action):
         setattr(namespace, self.dest, values)
 
 
-def run_local_flow(client_id: str, client_secret: str, redirect_uri: str, scopes: List[str] = []) -> Credentials:
+def run_local_flow(client_id: str, client_secret: str, redirect_uri: str, scopes: List[str] = []) -> auth.Credentials:
     # manually authorize and get auth code
     payload = {
         "client_id": client_id,
@@ -37,7 +36,7 @@ def run_local_flow(client_id: str, client_secret: str, redirect_uri: str, scopes
         "response_type": "code",
         "scope": " ".join(scopes),
     }
-    auth_request = Request("GET", OUTREACH_AUTHORIZATION_URL, params=payload).prepare()
+    auth_request = Request("GET", urls.OUTREACH_AUTHORIZATION_URL, params=payload).prepare()
     try:
         # temporarily redirect stdout to stderr so prompt doesn't get written to credentials file if
         # we are writing the credentials by redirecting stdout to file
@@ -55,7 +54,7 @@ def run_local_flow(client_id: str, client_secret: str, redirect_uri: str, scopes
     # exchange code from redirect for auth token
     session = Session()
     response = session.post(
-        OUTREACH_TOKEN_URL,
+        urls.OUTREACH_TOKEN_URL,
         data={
             "client_id": client_id,
             "client_secret": client_secret,
@@ -68,7 +67,7 @@ def run_local_flow(client_id: str, client_secret: str, redirect_uri: str, scopes
     response.raise_for_status()
     data = response.json()
 
-    return Credentials(
+    return auth.Credentials(
         client_id=client_id,
         client_secret=client_secret,
         redirect_uri=redirect_uri,
@@ -78,7 +77,7 @@ def run_local_flow(client_id: str, client_secret: str, redirect_uri: str, scopes
     )
 
 
-def main() -> None:
+def main(arguments: List[str]) -> None:
     parser = argparse.ArgumentParser(
         description="Issue new OAuth credentials for OutreachAPI access.", fromfile_prefix_chars="@"
     )
@@ -114,7 +113,7 @@ def main() -> None:
         type=argparse.FileType("w", encoding="utf-8"),
         help="The output file to which to write the credentials. If not provided default is stdout.",
     )
-    args = parser.parse_args()
+    args = parser.parse_args(arguments)
 
     credentials = run_local_flow(args.client_id, args.client_secret, args.oauth_redirect_uri, args.scopes)
     with args.out as credentials_file:
@@ -122,4 +121,4 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    main(sys.argv[1:])

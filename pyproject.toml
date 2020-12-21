@@ -30,7 +30,7 @@ Sphinx = "^3.3.1"
 sphinx-autodoc-typehints = "^1.11.1"
 
 [tool.poetry.scripts]
-authorize = "scripts.authorize:main"
+authorize = "outreach_sdk.cli.authorize:main"
 
 [tool.black]
 line-length = 120
