@@ -47,18 +47,18 @@ def test_main(monkeypatch, capfd, creds):
     # hack to enable using the capture as a context manager
     setattr(_pytest.capture.EncodedFile, "__enter__", lambda self, *args: self)
     setattr(_pytest.capture.EncodedFile, "__exit__", lambda self, *args: self)
-    authorize.main(
-        [
-            "--client_id",
-            "client_id",
-            "--client_secret",
-            "client_secret",
-            "--oauth_redirect_uri",
-            "redirect_uri",
-            "--scope",
-            "prospects.all",
-        ]
-    )
+    sys.argv = [
+        "authorize.py",
+        "--client_id",
+        "client_id",
+        "--client_secret",
+        "client_secret",
+        "--oauth_redirect_uri",
+        "redirect_uri",
+        "--scope",
+        "prospects.all",
+    ]
+    authorize.main()
     out, err = capfd.readouterr()
 
     assert json.loads(out) == {
@@ -79,7 +79,8 @@ def test_main_with_env_defaults(monkeypatch, capfd, creds):
     # hack to enable using the capture as a context manager
     setattr(_pytest.capture.EncodedFile, "__enter__", lambda self, *args: self)
     setattr(_pytest.capture.EncodedFile, "__exit__", lambda self, *args: self)
-    authorize.main(["--scope", "prospects.all"])
+    sys.argv = ["authorize.py", "--scope", "prospects.all"]
+    authorize.main()
     out, err = capfd.readouterr()
 
     assert json.loads(out) == {
