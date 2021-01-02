@@ -1,6 +1,7 @@
 import pytest
 
 from outreach_sdk.resources.exceptions import (
+    ApiError,
     InvalidFilterParameterError,
     InvalidSortParameterError,
     NoRelatedResourceException,
@@ -23,8 +24,10 @@ def test_api_error(requests_mock, prospects):
         },
         status_code=403,
     )
-    response = prospects.get(1)
-    assert "errors" in response
+    with pytest.raises(ApiError) as excinfo:
+        prospects.get(1)
+
+    assert str(excinfo.value) == "403 Unauthorized Request\ndetail: You are not authorized to perform that request."
 
 
 def test_invalid_filter_params(requests_mock, prospects):

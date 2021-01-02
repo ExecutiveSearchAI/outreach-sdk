@@ -60,3 +60,17 @@ class InvalidSortParameterError(InvalidQueryParameterError):
     """Raised when a provided resource or related resource attribute is not sortable."""
 
     pass
+
+
+class ApiError(Exception):
+    """Raised when the API responds with an error response."""
+
+    def __init__(self, status_code: int, title: str, detail: str):
+        """
+        Args:
+            status_code: The HTTP response code.
+            title: The error title from the response json.
+            detail: The error detail from the response json.
+        """
+        message = f"{status_code} {title}\ndetail: {detail}"
+        super(ApiError, self).__init__(message)

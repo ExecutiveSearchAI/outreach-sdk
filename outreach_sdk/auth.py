@@ -109,7 +109,7 @@ class Credentials:
         data = response.json()
         self.access_token = data.get("access_token")
         self.refresh_token = data.get("refresh_token")
-        self.expires_at = data.get("created_at") + data.get("expires_in")
+        self.expires_at = data.get("created_at", int(datetime.utcnow().timestamp())) + data.get("expires_in")
 
     def to_dict(self, strip: List[str] = None) -> dict:
         """
