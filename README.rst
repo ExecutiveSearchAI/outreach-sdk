@@ -162,6 +162,18 @@ NOTE: This doesn't seem to work in the API right now.
        ]
     }
 
+Create
+------
+Create a resource instance.
+
+.. code-block:: python
+
+    >>> prospects = outreach_sdk.resource("prospects", credentials)
+    >>> prospects.create(attributes={"firstName": "Jane", "lastName": "Doe"})
+    {
+       "data": {"type": "prospect", "id": 1, "attributes": {...}}
+    }
+
 Update
 ------
 Update a resources attributes.
