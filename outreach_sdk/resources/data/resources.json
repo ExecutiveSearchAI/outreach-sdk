@@ -175,6 +175,23 @@
     "relationships": [{"rel_name": "prospect", "resource": "prospects"}],
     "resource_type": "emailAddress"
   },
+  "phoneNumbers": {
+    "api_path": "phoneNumbers",
+    "attributes": {
+      "countryCode": {"filterable": false, "readonly": false, "sortable": false},
+      "createdAt": {"filterable": false, "readonly": true, "sortable": false},
+      "extension": {"filterable": false, "readonly": false, "sortable": false},
+      "number": {"filterable": true, "readonly": false, "sortable": true},
+      "order": {"filterable": true, "readonly": false, "sortable": true},
+      "phoneType": {"filterable": true, "readonly": false, "sortable": true},
+      "rawNumber": {"filterable": false, "readonly": false, "sortable": false},
+      "status": {"filterable": true, "readonly": false, "sortable": true},
+      "statusChangedAt": {"filterable": true, "readonly": true, "sortable": true},
+      "updatedAt": {"filterable": false, "readonly": true, "sortable": false}
+    },
+    "relationships": [{"rel_name": "prospect", "resource": "prospects"}],
+    "resource_type": "phoneNumber"
+  },
   "prospects": {
     "api_path": "prospects",
     "attributes": {
