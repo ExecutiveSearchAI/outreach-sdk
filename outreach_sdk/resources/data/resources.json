@@ -410,6 +410,7 @@
     "relationships": [
       {"rel_name": "account", "resource": "accounts"},
       {"rel_name": "emailAddresses", "resource": "emailAddresses"},
+      {"rel_name": "phoneNumbers", "resource": "phoneNumbers"},
       {"rel_name": "owner", "resource": "users"}
     ],
     "resource_type": "prospect"
