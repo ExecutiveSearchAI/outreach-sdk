@@ -10,7 +10,6 @@ from .exceptions import (
     InvalidFilterParameterError,
     InvalidSortParameterError,
     NoRelatedResourceException,
-    ReadonlyAttributeUpdateException,
     RelatedResourceNotIncludedException,
 )
 from .types import (
@@ -310,6 +309,24 @@ class ApiResource:
         response = self.session.get(f"{self.url}/{resource_id}", params=query_params)
         return cast(JSONDict, self._check_response(response))
 
+    def create(self, attributes: JSONDict = {}) -> JSONDict:
+        """
+        Creates a new resource.
+
+        Args:
+            attributes: Dictionary of attribute keys for the resource to create.
+
+        Returns:
+            An API response including the data for the created resource.
+        """
+        attributes = {key: value for key, value in attributes.items() if key not in self.readonly_fields}
+        data = {
+            "type": self.resource_type,
+            "attributes": attributes,
+        }
+        response = self.session.post(self.url, json={"data": data})
+        return cast(JSONDict, self._check_response(response))
+
     def update(self, resource_id: int, attributes: JSONDict = {}) -> JSONDict:
         """
         Update the resource specified by resource_id.
@@ -320,21 +337,13 @@ class ApiResource:
 
         Returns:
             An API response including the new values for the updated attributes and relationships.
-
-        Raises:
-            ReadonlyAttributeUpdateException: If an attribute provided for update is readonly.
         """
         # TODO: implement updates for related resource attributes
-        # check attributes are updatable fields
-        for field in attributes.keys():
-            if field in self.readonly_fields:
-                raise ReadonlyAttributeUpdateException(field, self.resource_type)
-
+        attributes = {key: value for key, value in attributes.items() if key not in self.readonly_fields}
         data = {
             "type": f"{self.resource_type}",
             "id": resource_id,
             "attributes": attributes,
         }
-
         response = self.session.patch(f"{self.url}/{resource_id}", json={"data": data})
         return cast(JSONDict, self._check_response(response))
