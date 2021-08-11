@@ -462,5 +462,23 @@
     },
     "relationships": [],
     "resource_type": "user"
+  },
+  "webhooks": {
+    "api_path": "webhooks",
+    "attributes": {
+      "action": {"filterable": true, "readonly": false, "sortable": true},
+      "active": {"filterable": true, "readonly": false, "sortable": true},
+      "createdAt": {"filterable": false, "readonly": true, "sortable": false},
+      "resource": {"filterable": true, "readonly": false, "sortable": true},
+      "secret": {"filterable": false, "readonly": false, "sortable": false},
+      "updatedAt": {"filterable": false, "readonly": true, "sortable": false},
+      "url": {"filterable": false, "readonly": false, "sortable": false}
+    },
+    "relationships": [
+      {"rel_name": "authorizer", "resource": "users"},
+      {"rel_name": "creator", "resource": "users"},
+      {"rel_name": "updater", "resource": "users"}
+    ],
+    "resource_type": "webhook"
   }
 }
