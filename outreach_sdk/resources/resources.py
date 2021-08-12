@@ -2,7 +2,7 @@ from typing import Dict, List, MutableSet, Optional, Union, cast
 
 import requests
 
-from outreach_sdk.types import ApiErrorResponse, ApiResponse, ApiSuccessResponse, JSONDict, JSONList
+from outreach_sdk.types import ApiErrorResponse, ApiResponse, ApiSuccessResponse, JSONDict
 from outreach_sdk.urls import OUTREACH_API_URL
 
 from .exceptions import (
@@ -208,7 +208,7 @@ class ApiResource:
 
         return params
 
-    def _check_response(self, response: requests.Response) -> Union[JSONList, JSONDict]:
+    def _check_response(self, response: requests.Response) -> ApiSuccessResponse:
         """
         Determine if a response is successful or not and behave accordingly.
 
@@ -227,8 +227,7 @@ class ApiResource:
             error = response_json.get("errors", [])[0]
             raise ApiError(response.status_code, error.get("title", ""), error.get("detail", ""))
         else:
-            response_json = cast(ApiSuccessResponse, response_json)
-            return cast(Union[JSONList, JSONDict], response_json.get("data"))
+            return cast(ApiSuccessResponse, response_json)
 
     def _get_related_resource_definition(self, relationship_name: str) -> ResourceDefinitionProps:
         props = self._get_related_resource_props(relationship_name)
@@ -242,7 +241,7 @@ class ApiResource:
         else:
             return props
 
-    def list(self, **kwargs: FilterParameterValue) -> JSONList:
+    def list(self, **kwargs: FilterParameterValue) -> ApiSuccessResponse:
         """
         Returns a list of resources filtered and sorted according to the provided keyword arguments.
 
@@ -286,9 +285,9 @@ class ApiResource:
         query_params.update(self._build_sort_params(sort))
 
         response = self.session.get(self.url, params=query_params)
-        return cast(JSONList, self._check_response(response))
+        return self._check_response(response)
 
-    def get(self, resource_id: int, include: List[str] = [], fields: List[str] = []) -> JSONDict:
+    def get(self, resource_id: int, include: List[str] = [], fields: List[str] = []) -> ApiSuccessResponse:
         """
         Gets a specific resource by id.
 
@@ -307,9 +306,9 @@ class ApiResource:
 
         query_params = self._build_query_params(include, fields)
         response = self.session.get(f"{self.url}/{resource_id}", params=query_params)
-        return cast(JSONDict, self._check_response(response))
+        return self._check_response(response)
 
-    def create(self, attributes: JSONDict = {}) -> JSONDict:
+    def create(self, attributes: JSONDict = {}) -> ApiSuccessResponse:
         """
         Creates a new resource.
 
@@ -325,9 +324,9 @@ class ApiResource:
             "attributes": attributes,
         }
         response = self.session.post(self.url, json={"data": data})
-        return cast(JSONDict, self._check_response(response))
+        return self._check_response(response)
 
-    def update(self, resource_id: int, attributes: JSONDict = {}) -> JSONDict:
+    def update(self, resource_id: int, attributes: JSONDict = {}) -> ApiSuccessResponse:
         """
         Update the resource specified by resource_id.
 
@@ -346,4 +345,4 @@ class ApiResource:
             "attributes": attributes,
         }
         response = self.session.patch(f"{self.url}/{resource_id}", json={"data": data})
-        return cast(JSONDict, self._check_response(response))
+        return self._check_response(response)
