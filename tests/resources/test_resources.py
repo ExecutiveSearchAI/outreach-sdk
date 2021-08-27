@@ -50,18 +50,30 @@ def test_invalid_sort_params(requests_mock, prospects):
         (
             {"firstName": "John", "emailAddresses__email": "email@example.com", "sort": ["-account.name", "firstName"]},
             "https://api.outreach.io/api/v2/prospects"
-            "?filter[firstName]=John&filter[emailAddresses][email]=email@example.com&sort=-account.name,firstName",
+            "?filter[firstName]=John&filter[emailAddresses][email]=email@example.com&sort=-account.name,firstName"
+            "&page[size]=50&count=false",
         ),
         (
             {"firstName": "John", "emailAddresses__email": "email@example.com"},
             "https://api.outreach.io/api/v2/prospects"
-            "?filter[firstName]=John&filter[emailAddresses][email]=email@example.com",
+            "?filter[firstName]=John&filter[emailAddresses][email]=email@example.com&page[size]=50&count=false",
         ),
         (
             {"sort": ["-account.name", "firstName"]},
-            "https://api.outreach.io/api/v2/prospects?sort=-account.name,firstName",
+            "https://api.outreach.io/api/v2/prospects?sort=-account.name,firstName&page[size]=50&count=false",
         ),
-        ({"sort": "-account.name"}, "https://api.outreach.io/api/v2/prospects?sort=-account.name"),
+        (
+            {"sort": "-account.name"},
+            "https://api.outreach.io/api/v2/prospects?sort=-account.name&page[size]=50&count=false",
+        ),
+        (
+            {"updatedAt": "2017-01-01..inf", "pagination": {"limit": 3}},
+            "https://api.outreach.io/api/v2/prospects?filter[updatedAt]=2017-01-01..inf&page[limit]=3",
+        ),
+        (
+            {"updatedAt": "2017-01-01..inf", "pagination": {"size": 200, "count": True}},
+            "https://api.outreach.io/api/v2/prospects?filter[updatedAt]=2017-01-01..inf&page[size]=200&count=true",
+        ),
     ],
 )
 def test_list_resources(kwargs, expected_url, requests_mock, prospects):

@@ -1,14 +1,10 @@
 from numbers import Number
-from typing import Dict, List, Union
+from typing import Dict, List, Optional, Union
 
 try:  # pragma: no cover
     from typing import TypedDict  # type: ignore
 except ImportError:  # pragma: no cover
     from typing_extensions import TypedDict
-
-
-FilterParameterValue = Union[str, Number, List[str], List[Number]]
-FilterParameterDict = Dict[str, FilterParameterValue]
 
 
 class ResourceAttributeProps(TypedDict):
@@ -43,3 +39,13 @@ class SortParam(TypedDict):
 
     field: str
     desc: bool
+
+
+class PaginationOptions(TypedDict):
+    size: int
+    count: bool
+    limit: Optional[int]
+
+
+FilterParameterValue = Union[str, Number, List[str], List[Number], PaginationOptions]
+FilterParameterDict = Dict[str, FilterParameterValue]
