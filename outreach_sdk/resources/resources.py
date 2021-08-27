@@ -211,7 +211,8 @@ class ApiResource:
         return params
 
     def _build_pagination_params(self, pagination_options: PaginationOptions) -> Dict[str, str]:
-        if limit := pagination_options.get("limit", self.pagination["limit"]):
+        limit = pagination_options.get("limit", self.pagination["limit"])
+        if limit:
             return {"page[limit]": str(min(limit, 1000))}
         else:
             return {
