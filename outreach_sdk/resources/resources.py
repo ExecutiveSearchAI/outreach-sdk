@@ -59,7 +59,7 @@ class ApiResource:
     """
 
     api_endpoint: str = OUTREACH_API_URL
-    pagination: PaginationOptions = {"size": 50, "count": False, "limit": None}
+    pagination: PaginationOptions = cast(PaginationOptions, {"size": 50, "count": False, "limit": None})
     _filter_fields: Optional[MutableSet[str]] = None
     _readonly_fields: Optional[MutableSet[str]] = None
     _sort_fields: Optional[MutableSet[str]] = None

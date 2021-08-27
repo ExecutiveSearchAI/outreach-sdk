@@ -41,7 +41,7 @@ class SortParam(TypedDict):
     desc: bool
 
 
-class PaginationOptions(TypedDict, total=False):
+class PaginationOptions(TypedDict):
     size: int
     count: bool
     limit: Optional[int]
