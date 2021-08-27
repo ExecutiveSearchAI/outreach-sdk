@@ -1,3 +1,4 @@
+import json
 from typing import Dict, List, MutableSet, Optional, Union, cast
 
 import requests
@@ -15,6 +16,7 @@ from .exceptions import (
 from .types import (
     FilterParameterDict,
     FilterParameterValue,
+    PaginationOptions,
     ResourceAttributes,
     ResourceDefinitionProps,
     ResourceRelationshipProps,
@@ -57,7 +59,7 @@ class ApiResource:
     """
 
     api_endpoint: str = OUTREACH_API_URL
-    pagination: dict = {"size": 50, "count": False, "limit": 0}
+    pagination: PaginationOptions = {"size": 50, "count": False, "limit": None}
     _filter_fields: Optional[MutableSet[str]] = None
     _readonly_fields: Optional[MutableSet[str]] = None
     _sort_fields: Optional[MutableSet[str]] = None
@@ -208,6 +210,15 @@ class ApiResource:
 
         return params
 
+    def _build_pagination_params(self, pagination_options: PaginationOptions) -> Dict[str, str]:
+        if limit := pagination_options.get("limit", self.pagination["limit"]):
+            return {"page[limit]": str(min(limit, 1000))}
+        else:
+            return {
+                "page[size]": str(pagination_options.get("size", self.pagination["size"])),
+                "count": json.dumps(pagination_options.get("count", self.pagination["count"]) is True),
+            }
+
     def _check_response(self, response: requests.Response) -> ApiSuccessResponse:
         """
         Determine if a response is successful or not and behave accordingly.
@@ -281,8 +292,10 @@ class ApiResource:
 
         """
         sort: Union[List[str], str] = kwargs.pop("sort", [])  # type: ignore
+        pagination_options: PaginationOptions = kwargs.pop("pagination", {})  # type: ignore
         query_params = self._build_filter_params(kwargs)
         query_params.update(self._build_sort_params(sort))
+        query_params.update(self._build_pagination_params(pagination_options))
 
         response = self.session.get(self.url, params=query_params)
         return self._check_response(response)
