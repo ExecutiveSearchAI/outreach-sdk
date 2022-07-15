@@ -232,6 +232,7 @@
       "syncPassiveFrequency": {"filterable": false, "readonly": false, "sortable": false},
       "syncSuccessAt": {"filterable": false, "readonly": true, "sortable": false},
       "updatedAt": {"filterable": true, "readonly": true, "sortable": true},
+      "userId": {"filterable": true, "readonly": true, "sortable": true},
       "username": {"filterable": false, "readonly": false, "sortable": false}
     },
     "relationships": [
@@ -550,6 +551,7 @@
       "email": {"filterable": true, "readonly": false, "sortable": true},
       "emailVoiceRecordings": {"filterable": false, "readonly": false, "sortable": false},
       "firstName": {"filterable": true, "readonly": false, "sortable": true},
+      "id": {"filterable": true, "readonly": true, "sortable": true},
       "inboundBridgePhone": {"filterable": false, "readonly": false, "sortable": false},
       "inboundBridgePhoneExtension": {"filterable": false, "readonly": false, "sortable": false},
       "inboundCallBehavior": {"filterable": false, "readonly": false, "sortable": false},
