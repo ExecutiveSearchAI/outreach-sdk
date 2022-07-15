@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "outreach-sdk"
-version = "0.4.1"
+version = "0.4.2"
 description = "Outreach API wrapper in Python"
 authors = ["Cuddlemuffin007 <brennonkrogers@gmail.com>"]
 license = "MIT"
