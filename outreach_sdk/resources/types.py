@@ -41,11 +41,11 @@ class SortParam(TypedDict):
     desc: bool
 
 
-class PaginationOptions(TypedDict):
+class PaginationOptions(TypedDict, total=False):
     size: int
     count: bool
     limit: Optional[int]
 
 
-FilterParameterValue = Union[str, Number, List[str], List[Number], PaginationOptions]
+FilterParameterValue = Union[int, str, Number, List[int], List[str], List[Number], PaginationOptions]
 FilterParameterDict = Dict[str, FilterParameterValue]
