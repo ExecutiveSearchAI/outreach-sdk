@@ -529,6 +529,48 @@
     ],
     "resource_type": "prospect"
   },
+  "tasks": {
+    "api_path": "tasks",
+    "attributes": {
+      "action": {"filterable": false, "readonly": false, "sortable": false},
+      "autoskipAt": {"filterable": true, "readonly": false, "sortable": true},
+      "compiledSequenceTemplateHtml": {"filterable": false, "readonly": true, "sortable": false},
+      "completed": {"filterable": false, "readonly": true, "sortable": false},
+      "completedAt": {"filterable": false, "readonly": true, "sortable": false},
+      "createdAt": {"filterable": true, "readonly": true, "sortable": true},
+      "dueAt": {"filterable": true, "readonly": false, "sortable": true},
+      "note": {"filterable": false, "readonly": false, "sortable": false},
+      "opportunityAssociation": {"filterable": false, "readonly": false, "sortable": false},
+      "scheduledAt": {"filterable": true, "readonly": true, "sortable": true},
+      "state": {"filterable": true, "readonly": true, "sortable": true},
+      "stateChangedAt": {"filterable": true, "readonly": true, "sortable": true},
+      "taskType": {"filterable": true, "readonly": true, "sortable": true},
+      "updatedAt": {"filterable": true, "readonly": true, "sortable": true}
+    },
+    "relationships": [
+      {"rel_name": "account", "resource": "accounts"},
+      {"rel_name": "completer", "resource": "users"},
+      {"rel_name": "creator", "resource": "users"},
+      {"rel_name": "mailing", "resource": "mailings"},
+      {"rel_name": "mailings", "resource": "mailings"},
+      {"rel_name": "owner", "resource": "users"},
+      {"rel_name": "prospect", "resource": "prospects"},
+      {"rel_name": "taskPriority", "resource": "taskPriorities"}
+    ],
+    "resource_type": "task"
+  },
+  "taskPriorities": {
+    "api_path": "taskPriorities",
+    "attributes": {
+      "color": {"filterable": false, "readonly": false, "sortable": false},
+      "createdAt": {"filterable": true, "readonly": true, "sortable": true},
+      "name": {"filterable": true, "readonly": false, "sortable": true},
+      "updatedAt": {"filterable": true, "readonly": true, "sortable": true},
+      "weight": {"filterable": true, "readonly": false, "sortable": true}
+    },
+    "relationships": [{"rel_name": "tasks", "resource": "tasks"}],
+    "resource_type": "taskPriority"
+  },
   "users": {
     "api_path": "users",
     "attributes": {

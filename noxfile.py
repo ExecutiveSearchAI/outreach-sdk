@@ -58,7 +58,11 @@ def lint(session: Session) -> None:
 def mypy(session: Session) -> None:
     """Type-check with mypy."""
     args = session.posargs or targets
-    install_with_constraints(session, "mypy")
+    session.run("poetry", "install", "--no-dev", external=True)
+    requirements = ["mypy"]
+    if session.python == "3.7":
+        requirements.extend(["typing-extensions"])
+    install_with_constraints(session, *requirements)
     session.run("mypy", *args)
 
 
