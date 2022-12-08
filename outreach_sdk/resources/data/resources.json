@@ -475,6 +475,7 @@
       "googlePlusUrl": {"filterable": false, "readonly": false, "sortable": false},
       "graduationDate": {"filterable": false, "readonly": false, "sortable": false},
       "homePhones": {"filterable": false, "readonly": false, "sortable": false},
+      "id": {"filterable": true, "readonly": true, "sortable": true},
       "jobStartDate": {"filterable": false, "readonly": false, "sortable": false},
       "lastName": {"filterable": true, "readonly": false, "sortable": true},
       "linkedInConnections": {"filterable": false, "readonly": false, "sortable": false},
