@@ -322,20 +322,23 @@ class ApiResource:
         response = self.session.get(f"{self.url}/{resource_id}", params=query_params)
         return self._check_response(response)
 
-    def create(self, attributes: JSONDict = {}) -> ApiSuccessResponse:
+    def create(self, attributes: JSONDict = {}, relationships: JSONDict = {}) -> ApiSuccessResponse:
         """
         Creates a new resource.
 
         Args:
             attributes: Dictionary of attribute keys for the resource to create.
+            relationships: Dictionary of related resources to add on creation.
 
         Returns:
             An API response including the data for the created resource.
         """
         attributes = {key: value for key, value in attributes.items() if key not in self.readonly_fields}
+        relationships = {key: value for key, value in relationships.items() if key in self._relationships}
         data = {
             "type": self.resource_type,
             "attributes": attributes,
+            "relationships": relationships,
         }
         response = self.session.post(self.url, json={"data": data})
         return self._check_response(response)
@@ -359,4 +362,17 @@ class ApiResource:
             "attributes": attributes,
         }
         response = self.session.patch(f"{self.url}/{resource_id}", json={"data": data})
+        return self._check_response(response)
+
+    def delete(self, resource_id: int) -> ApiSuccessResponse:
+        """
+        Delete the resource specified by resource_id.
+
+        Args:
+            resource_id: The id of the resource to fetch.
+
+        Returns:
+            An API response including the new values for the updated attributes and relationships.
+        """
+        response = self.session.delete(f"{self.url}/{resource_id}")
         return self._check_response(response)

@@ -184,5 +184,14 @@ Update a resources attributes.
     >>> prospects.update(1, attributes={"tags": ["Tag 1", "Tag 2"]})
     {"data": {"type": "prospect", "id": 1, "attributes": {"tags": ["Tag 1", "Tag 2"]}}}
 
+Delete
+------
+Delete a resource.
+
+.. code-block:: python
+
+    >>> prospects = outreach_sdk.resource("prospects", credentials)
+    >>> prospects.delete(1)
+
 Contributing
 ============

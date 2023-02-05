@@ -125,7 +125,7 @@ def test_create_resource(requests_mock, prospects):
     prospects.create(attributes={"firstName": "James", "lastName": "Bond", "name": "James Bond"})
 
     assert requests_mock.last_request.json() == {
-        "data": {"type": "prospect", "attributes": {"firstName": "James", "lastName": "Bond"}}
+        "data": {"type": "prospect", "attributes": {"firstName": "James", "lastName": "Bond"}, "relationships": {}}
     }
 
 
@@ -145,3 +145,8 @@ def test_update_resource_readonly_field(requests_mock, prospects):
     assert requests_mock.last_request.json() == {
         "data": {"type": "prospect", "id": 1, "attributes": {"lastName": "Bond"}}
     }
+
+
+def test_delete_resource(requests_mock, prospects):
+    requests_mock.delete("https://api.outreach.io/api/v2/prospects/1", json={})
+    prospects.delete(1)
