@@ -334,7 +334,10 @@ class ApiResource:
             An API response including the data for the created resource.
         """
         attributes = {key: value for key, value in attributes.items() if key not in self.readonly_fields}
-        relationships = {key: value for key, value in relationships.items() if key in self._relationships}
+        relationships = {
+            key: value for key, value in relationships.items()
+            if key in [r.get("rel_name") for r in self._relationships]
+        }
         data = {
             "type": self.resource_type,
             "attributes": attributes,

@@ -614,6 +614,7 @@
     "relationships": [
       {"rel_name": "account", "resource": "accounts"},
       {"rel_name": "creator", "resource": "users"},
+      {"rel_name": "mailbox", "resource": "mailboxes"},
       {"rel_name": "mailings", "resource": "mailings"},
       {"rel_name": "prospect", "resource": "prospects"},
       {"rel_name": "sequence", "resource": "sequences"},
