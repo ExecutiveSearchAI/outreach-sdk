@@ -148,5 +148,6 @@ def test_update_resource_readonly_field(requests_mock, prospects):
 
 
 def test_delete_resource(requests_mock, prospects):
-    requests_mock.delete("https://api.outreach.io/api/v2/prospects/1", json={})
-    prospects.delete(1)
+    requests_mock.delete("https://api.outreach.io/api/v2/prospects/1", text="", status_code=204)
+    response = prospects.delete(1)
+    assert response == {"data": {"message": "success", "detail": "prospect deleted"}}

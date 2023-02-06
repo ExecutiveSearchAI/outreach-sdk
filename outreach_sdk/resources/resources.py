@@ -233,6 +233,9 @@ class ApiResource:
         Raises:
             ApiError: If the response json contains an 'error' attribute.
         """
+        if response.status_code == requests.codes.no_content:
+            return ApiSuccessResponse(data={"message": "success", "detail": f"{self.resource_type} deleted"})
+
         response_json: ApiResponse = response.json()
         if "errors" in response_json:
             response_json = cast(ApiErrorResponse, response_json)
