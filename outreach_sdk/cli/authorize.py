@@ -118,7 +118,8 @@ def parse_arguments(arguments: List[str]) -> argparse.Namespace:
 
 def main() -> None:
     args = parse_arguments(sys.argv[1:])
-    credentials = run_local_flow(args.client_id, args.client_secret, args.oauth_redirect_uri, args.scopes)
+    scopes = [s.strip() for s in args.scopes if s.strip()]
+    credentials = run_local_flow(args.client_id, args.client_secret, args.oauth_redirect_uri, scopes)
     with args.out as credentials_file:
         credentials_file.write(credentials.to_json())
 

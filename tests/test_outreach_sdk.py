@@ -9,7 +9,7 @@ def test_create_resource(creds):
     resource = outreach_sdk.resource("prospects", credentials)
     assert resource.url == "https://api.outreach.io/api/v2/prospects"
     assert resource.resource_type == "prospect"
-    assert resource.session.headers["User-Agent"] == "Outreach SDK Python/0.4.5"
+    assert resource.session.headers["User-Agent"] == "Outreach SDK Python/0.4.6"
     assert resource.session.headers["Content-Type"] == "application/vnd.api+json"
     assert resource.session.headers["Authorization"] == "Bearer access_token"
     assert resource.filter_fields == {
