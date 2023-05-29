@@ -44,7 +44,7 @@ def install(session: Session, groups: Iterable[str], root: bool = True) -> None:
 def lint(session: Session) -> None:
     """Lint using Flake8"""
     args = session.posargs or targets
-    install(session, ["dev"])
+    install(session, groups=["code-style"])
     session.run("flake8", *args)
     session.run("isort", "--check", ".")
     session.run("black", "--check", ".")
@@ -54,7 +54,7 @@ def lint(session: Session) -> None:
 def mypy(session: Session) -> None:
     """Type-check with mypy."""
     args = session.posargs or targets
-    install(session, ["typing"])
+    install(session, groups=["typing"])
     session.run("mypy", *args)
 
 
@@ -64,14 +64,14 @@ def tests(session: Session) -> None:
     groups = ["tests"]
     if "--cov" in session.posargs:
         groups.append("coverage")
-    install(session, groups)
+    install(session, groups=groups)
     session.run("pytest", *session.posargs)
 
 
 @nox.session(python="3.9")
 def coverage(session: Session) -> None:
     """Upload coverage data."""
-    install(session, ["tests", "coverage"])
+    install(session, groups=["coverage"], root=False)
     session.run("coverage", "xml", "--fail-under=0")
     session.run("codecov", *session.posargs)
 
@@ -79,5 +79,5 @@ def coverage(session: Session) -> None:
 @nox.session(python="3.9")
 def docs(session: Session) -> None:
     """Build the documentation."""
-    install(session, ["docs"])
+    install(session, groups=["docs"])
     session.run("sphinx-build", "docs", "docs/_build")
