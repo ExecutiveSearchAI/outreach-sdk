@@ -12,23 +12,6 @@ files = [
 ]
 
 [[package]]
-name = "argcomplete"
-version = "1.12.3"
-description = "Bash tab completion for argparse"
-optional = false
-python-versions = "*"
-files = [
-    {file = "argcomplete-1.12.3-py2.py3-none-any.whl", hash = "sha256:291f0beca7fd49ce285d2f10e4c1c77e9460cf823eef2de54df0c0fec88b0d81"},
-    {file = "argcomplete-1.12.3.tar.gz", hash = "sha256:2c7dbffd8c045ea534921e63b0be6fe65e88599990d8dc408ac8c542b72a5445"},
-]
-
-[package.dependencies]
-importlib-metadata = {version = ">=0.23,<5", markers = "python_version == \"3.7\""}
-
-[package.extras]
-test = ["coverage", "flake8", "pexpect", "wheel"]
-
-[[package]]
 name = "atomicwrites"
 version = "1.4.1"
 description = "Atomic file writes."
@@ -269,20 +252,6 @@ files = [
     {file = "colorama-0.4.6-py2.py3-none-any.whl", hash = "sha256:4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6"},
     {file = "colorama-0.4.6.tar.gz", hash = "sha256:08695f5cb7ed6e0531a20572697297273c47b8cae5a63ffc6d6ed5c201be6e44"},
 ]
-
-[[package]]
-name = "colorlog"
-version = "4.8.0"
-description = "Log formatting with colors!"
-optional = false
-python-versions = "*"
-files = [
-    {file = "colorlog-4.8.0-py2.py3-none-any.whl", hash = "sha256:3dd15cb27e8119a24c1a7b5c93f9f3b455855e0f73993b1c25921b2f646f1dcd"},
-    {file = "colorlog-4.8.0.tar.gz", hash = "sha256:59b53160c60902c405cdec28d38356e09d40686659048893e026ecbd589516b1"},
-]
-
-[package.dependencies]
-colorama = {version = "*", markers = "sys_platform == \"win32\""}
 
 [[package]]
 name = "coverage"
@@ -640,27 +609,6 @@ files = [
 
 [package.dependencies]
 setuptools = "*"
-
-[[package]]
-name = "nox"
-version = "2020.12.31"
-description = "Flexible test automation."
-optional = false
-python-versions = ">=3.6"
-files = [
-    {file = "nox-2020.12.31-py3-none-any.whl", hash = "sha256:f179d6990f7a0a9cebad01b9ecea34556518b8d3340dfcafdc1d85f2c1a37ea0"},
-    {file = "nox-2020.12.31.tar.gz", hash = "sha256:58a662070767ed4786beb46ce3a789fca6f1e689ed3ac15c73c4d0094e4f9dc4"},
-]
-
-[package.dependencies]
-argcomplete = ">=1.9.4,<2.0"
-colorlog = ">=2.6.1,<5.0.0"
-importlib-metadata = {version = "*", markers = "python_version < \"3.8\""}
-py = ">=1.4.0,<2.0.0"
-virtualenv = ">=14.0.0"
-
-[package.extras]
-tox-to-nox = ["jinja2", "tox"]
 
 [[package]]
 name = "packaging"
@@ -1279,4 +1227,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.7"
-content-hash = "a4db5426b4ee212648e732cb821820026ca0a8079e34a89a47ee14ad4bb1bc44"
+content-hash = "3710a082433cae2928f20e53c41fdc0e513cdff696c683ff512f4ee346b46969"

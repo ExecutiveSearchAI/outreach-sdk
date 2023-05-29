@@ -338,7 +338,8 @@ class ApiResource:
         """
         attributes = {key: value for key, value in attributes.items() if key not in self.readonly_fields}
         relationships = {
-            key: value for key, value in relationships.items()
+            key: value
+            for key, value in relationships.items()
             if key in [r.get("rel_name") for r in self._relationships]
         }
         data = {

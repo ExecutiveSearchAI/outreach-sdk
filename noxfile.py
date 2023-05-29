@@ -46,46 +46,38 @@ def lint(session: Session) -> None:
     args = session.posargs or targets
     install(session, ["dev"])
     session.run("flake8", *args)
-    session.run("isort", ".")
-    session.run("black", ".")
+    session.run("isort", "--check", ".")
+    session.run("black", "--check", ".")
 
 
-# @nox.session(python=["3.9", "3.8", "3.7"])
-# def mypy(session: Session) -> None:
-#     """Type-check with mypy."""
-#     args = session.posargs or targets
-#     session.run("poetry", "install", "--no-dev", external=True)
-#     requirements = ["mypy"]
-#     if session.python == "3.7":
-#         requirements.extend(["typing-extensions"])
-#     # install_with_constraints(session, *requirements)
-#     session.run("mypy", *args)
+@nox.session(python=["3.9", "3.8", "3.7"])
+def mypy(session: Session) -> None:
+    """Type-check with mypy."""
+    args = session.posargs or targets
+    install(session, ["typing"])
+    session.run("mypy", *args)
 
 
-# @nox.session(python=["3.9", "3.8", "3.7"])
-# def tests(session: Session) -> None:
-#     """Run the test suite."""
-#     session.run("poetry", "install", "--no-dev", external=True)
-#     requirements = ["pytest", "requests-mock"]
-#     if "--cov" in session.posargs:
-#         requirements.extend(["coverage[toml]", "pytest-cov"])
-#     if session.python == "3.7":
-#         requirements.append("typing-extensions")
-#     # install_with_constraints(session, *requirements)
-#     session.run("pytest", *session.posargs)
+@nox.session(python=["3.9", "3.8", "3.7"])
+def tests(session: Session) -> None:
+    """Run the test suite."""
+    groups = ["tests"]
+    if "--cov" in session.posargs:
+        groups.append("coverage")
+    install(session, groups)
+    session.run("pytest", *session.posargs)
 
 
-# @nox.session(python="3.9")
-# def coverage(session: Session) -> None:
-#     """Upload coverage data."""
-#     # install_with_constraints(session, "coverage[toml]", "codecov")
-#     session.run("coverage", "xml", "--fail-under=0")
-#     session.run("codecov", *session.posargs)
+@nox.session(python="3.9")
+def coverage(session: Session) -> None:
+    """Upload coverage data."""
+    install(session, ["tests", "coverage"])
+    session.run("coverage", "xml", "--fail-under=0")
+    session.run("codecov", *session.posargs)
 
 
-# @nox.session(python="3.9")
-# def docs(session: Session) -> None:
-#     """Build the documentation."""
-#     session.run("poetry", "install", "--no-dev", external=True)
-#     # install_with_constraints(session, "sphinx", "sphinx-autodoc-typehints")
-#     session.run("sphinx-build", "docs", "docs/_build")
+@nox.session(python="3.9")
+def docs(session: Session) -> None:
+    """Build the documentation."""
+    install(session, ["docs"])
+    session.run("sphinx-build", "docs", "docs/_build")
