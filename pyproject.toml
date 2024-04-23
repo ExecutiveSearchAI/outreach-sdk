@@ -36,8 +36,8 @@ codecov = "^2.1.10"
 pytest-cov = "^5.0.0"
 
 [tool.poetry.group.docs.dependencies]
-Sphinx = "^3.3.1"
 sphinx-autodoc-typehints = "^1.11.1"
+sphinx = "^7.3.7"
 
 [tool.poetry.scripts]
 authorize = "outreach_sdk.cli.authorize:main"
