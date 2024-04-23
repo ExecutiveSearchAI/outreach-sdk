@@ -40,7 +40,7 @@ def install(session: Session, groups: Iterable[str], root: bool = True) -> None:
         session.install(".")
 
 
-@nox.session(python=["3.9", "3.8", "3.7"])
+@nox.session(python=["3.9", "3.10", "3.11"])
 def lint(session: Session) -> None:
     """Lint using Flake8"""
     args = session.posargs or targets
@@ -50,7 +50,7 @@ def lint(session: Session) -> None:
     session.run("black", "--check", ".")
 
 
-@nox.session(python=["3.9", "3.8", "3.7"])
+@nox.session(python=["3.9", "3.10", "3.11"])
 def mypy(session: Session) -> None:
     """Type-check with mypy."""
     args = session.posargs or targets
@@ -58,7 +58,7 @@ def mypy(session: Session) -> None:
     session.run("mypy", *args)
 
 
-@nox.session(python=["3.9", "3.8", "3.7"])
+@nox.session(python=["3.9", "3.10", "3.11"])
 def tests(session: Session) -> None:
     """Run the test suite."""
     groups = ["tests"]
