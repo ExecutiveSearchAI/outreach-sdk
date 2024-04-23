@@ -301,7 +301,7 @@ class ApiResource:
         query_params.update(self._build_sort_params(sort))
         query_params.update(self._build_pagination_params(pagination_options))
 
-        response = self.session.get(self.url, params=query_params)
+        response = self.session.get(self.url, params=query_params)  # type: ignore
         return self._check_response(response)
 
     def get(self, resource_id: int, include: List[str] = [], fields: List[str] = []) -> ApiSuccessResponse:

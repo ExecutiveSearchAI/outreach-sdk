@@ -111,7 +111,7 @@ class Credentials:
         self.refresh_token = data.get("refresh_token")
         self.expires_at = data.get("created_at", int(datetime.utcnow().timestamp())) + data.get("expires_in")
 
-    def to_dict(self, strip: List[str] = None) -> dict:
+    def to_dict(self, strip: Optional[List[str]] = None) -> dict:
         """
         Creates a dictionary representation of a Credentials object.
 
@@ -137,7 +137,7 @@ class Credentials:
 
         return prep
 
-    def to_json(self, strip: List[str] = None) -> str:
+    def to_json(self, strip: Optional[List[str]] = None) -> str:
         """
         Creates a JSON representation of this instance using :py:meth:`Credentials.to_dict`.
         Useful for storing/updating credentials in your preferred storage backend.
