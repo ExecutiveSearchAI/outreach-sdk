@@ -159,6 +159,74 @@
     "relationships": [{"rel_name": "owner", "resource": "users"}],
     "resource_type": "account"
   },
+  "calls": {
+    "api_path": "calls",
+    "attributes": {
+      "answeredAt": {"filterable": false, "readonly": false, "sortable": false},
+      "completedAt": {"filterable": false, "readonly": false, "sortable": false},
+      "createdAt": {"filterable": true, "readonly": true, "sortable": true},
+      "dialedAt": {"filterable": false, "readonly": false, "sortable": false},
+      "direction": {"filterable": false, "readonly": false, "sortable": false},
+      "externalVendor": {"filterable": false, "readonly": false, "sortable": false},
+      "from": {"filterable": true, "readonly": false, "sortable": true},
+      "note": {"filterable": false, "readonly": false, "sortable": false},
+      "outcome": {"filterable": true, "readonly": false, "sortable": true},
+      "recordingUrl": {"filterable": true, "readonly": false, "sortable": true},
+      "returnedAt": {"filterable": false, "readonly": false, "sortable": false},
+      "sequenceAction": {"filterable": false, "readonly": false, "sortable": false},
+      "shouldRecordCall": {"filterable": false, "readonly": false, "sortable": false},
+      "state": {"filterable": true, "readonly": true, "sortable": true},
+      "stateChangedAt": {"filterable": false, "readonly": true, "sortable": false},
+      "tags": {"filterable": false, "readonly": false, "sortable": false},
+      "to": {"filterable": true, "readonly": false, "sortable": true},
+      "uid": {"filterable": false, "readonly": true, "sortable": false},
+      "updatedAt": {"filterable": true, "readonly": true, "sortable": true},
+      "userCallType": {"filterable": true, "readonly": false, "sortable": true},
+      "vendorCallId": {"filterable": false, "readonly": false, "sortable": false},
+      "voicemailRecordingUrl": {"filterable": false, "readonly": true, "sortable": false}
+    },
+    "relationships": [
+      {"rel_name": "callDisposition", "resource": "callDispositions"},
+      {"rel_name": "callPurpose", "resource": "callPurposes"},
+      {"rel_name": "phoneNumber", "resource": "phoneNumbers"},
+      {"rel_name": "prospect", "resource": "prospects"},
+      {"rel_name": "sequence", "resource": "sequences"},
+      {"rel_name": "sequenceState", "resource": "sequenceStates"},
+      {"rel_name": "sequenceStep", "resource": "sequenceSteps"},
+      {"rel_name": "task", "resource": "tasks"},
+      {"rel_name": "user", "resource": "users"}
+    ],
+    "resource_type": "call"
+  },
+  "callDispositions": {
+    "api_path": "callDispositions",
+    "attributes": {
+      "createdAt": {"filterable": true, "readonly": true, "sortable": true},
+      "name": {"filterable": true, "readonly": false, "sortable": true},
+      "order": {"filterable": true, "readonly": false, "sortable": true},
+      "outcome": {"filterable": true, "readonly": false, "sortable": true},
+      "updatedAt": {"filterable": true, "readonly": true, "sortable": true}
+    },
+    "relationships": [
+      {"rel_name": "calls", "resource": "calls"},
+      {"rel_name": "creator", "resource": "users"}
+    ],
+    "resource_type": "callDispositon"
+  },
+  "callPurposes": {
+    "api_path": "callPurposes",
+    "attributes": {
+      "createdAt": {"filterable": true, "readonly": true, "sortable": true},
+      "name": {"filterable": true, "readonly": false, "sortable": true},
+      "order": {"filterable": true, "readonly": false, "sortable": true},
+      "updatedAt": {"filterable": true, "readonly": true, "sortable": true}
+    },
+    "relationships": [
+      {"rel_name": "calls", "resource": "calls"},
+      {"rel_name": "creator", "resource": "users"}
+    ],
+    "resource_type": "callPurpose"
+  },
   "emailAddresses": {
     "api_path": "emailAddresses",
     "attributes": {
@@ -524,9 +592,13 @@
     },
     "relationships": [
       {"rel_name": "account", "resource": "accounts"},
+      {"rel_name": "activeSequenceStates", "resource": "sequenceStates"},
+      {"rel_name": "calls", "resource": "calls"},
       {"rel_name": "emailAddresses", "resource": "emailAddresses"},
       {"rel_name": "phoneNumbers", "resource": "phoneNumbers"},
-      {"rel_name": "owner", "resource": "users"}
+      {"rel_name": "owner", "resource": "users"},
+      {"rel_name": "sequenceStates", "resource": "sequenceStates"},
+      {"rel_name": "tasks", "resource": "tasks"}
     ],
     "resource_type": "prospect"
   },
@@ -677,12 +749,18 @@
     },
     "relationships": [
       {"rel_name": "account", "resource": "accounts"},
+      {"rel_name": "call", "resource": "calls"},
+      {"rel_name": "calls", "resource": "calls"},
       {"rel_name": "completer", "resource": "users"},
       {"rel_name": "creator", "resource": "users"},
       {"rel_name": "mailing", "resource": "mailings"},
       {"rel_name": "mailings", "resource": "mailings"},
       {"rel_name": "owner", "resource": "users"},
       {"rel_name": "prospect", "resource": "prospects"},
+      {"rel_name": "sequence", "resource": "sequences"},
+      {"rel_name": "sequenceSequenceStep", "resource": "sequenceSteps"},
+      {"rel_name": "sequenceState", "resource": "sequenceStates"},
+      {"rel_name": "sequenceStep", "resource": "sequenceSteps"},
       {"rel_name": "taskPriority", "resource": "taskPriorities"}
     ],
     "resource_type": "task"
