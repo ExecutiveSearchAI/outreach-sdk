@@ -125,11 +125,7 @@ def test_create_resource(requests_mock, prospects):
     prospects.create(attributes={"firstName": "James", "lastName": "Bond", "name": "James Bond"})
 
     assert requests_mock.last_request.json() == {
-        "data": {
-            "type": "prospect",
-            "attributes": {"firstName": "James", "lastName": "Bond", "name": "James Bond"},
-            "relationships": {},
-        },
+        "data": {"type": "prospect", "attributes": {"firstName": "James", "lastName": "Bond"}, "relationships": {}}
     }
 
 
