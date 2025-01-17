@@ -4,6 +4,7 @@ Nox sessions.
 Borrowed from
 https://github.com/cjolowicz/cookiecutter-hypermodern-python-instance/blob/90e45cee4725c51c77864ab21efead23d5226306/noxfile.py#L26-L51
 """
+
 from typing import Iterable
 
 import nox
@@ -40,7 +41,7 @@ def install(session: Session, groups: Iterable[str], root: bool = True) -> None:
         session.install(".")
 
 
-@nox.session(python=["3.9", "3.10", "3.11"])
+@nox.session(python=["3.10", "3.11", "3.12"])
 def lint(session: Session) -> None:
     """Lint using Flake8"""
     args = session.posargs or targets
@@ -50,7 +51,7 @@ def lint(session: Session) -> None:
     session.run("black", "--check", ".")
 
 
-@nox.session(python=["3.9", "3.10", "3.11"])
+@nox.session(python=["3.10", "3.11", "3.12"])
 def mypy(session: Session) -> None:
     """Type-check with mypy."""
     args = session.posargs or targets
@@ -58,7 +59,7 @@ def mypy(session: Session) -> None:
     session.run("mypy", *args)
 
 
-@nox.session(python=["3.9", "3.10", "3.11"])
+@nox.session(python=["3.10", "3.11", "3.12"])
 def tests(session: Session) -> None:
     """Run the test suite."""
     groups = ["tests"]
@@ -68,7 +69,7 @@ def tests(session: Session) -> None:
     session.run("pytest", *session.posargs)
 
 
-@nox.session(python="3.9")
+@nox.session(python="3.10")
 def coverage(session: Session) -> None:
     """Upload coverage data."""
     install(session, groups=["coverage"], root=False)
@@ -76,7 +77,7 @@ def coverage(session: Session) -> None:
     session.run("codecov", *session.posargs)
 
 
-@nox.session(python="3.9")
+@nox.session(python="3.10")
 def docs(session: Session) -> None:
     """Build the documentation."""
     install(session, groups=["docs"])
