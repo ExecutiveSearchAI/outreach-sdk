@@ -4,14 +4,13 @@ jobs:
   coverage:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-python@v1
+    - uses: actions/checkout@v4
+    - uses: actions/setup-python@v5
       with:
-        python-version: '3.10'
-        architecture: x64
-    - run: pip install nox==2020.8.22
-    - run: pip install poetry==1.5.0
-    - run: nox --session tests-3.10 -- --cov
-    - run: nox --session coverage
+        python-version: '3.13'
+    - run: pip install poetry==2.0.1
+    - run: poetry install --with tests,coverage
+    - run: poetry run pytest --cov --cov-report=xml
+    - run: poetry run codecov
       env:
         CODECOV_TOKEN: ${{secrets.CODECOV_TOKEN}}

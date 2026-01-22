@@ -6,7 +6,7 @@ authors = ["Cuddlemuffin007 <brennonkrogers@gmail.com>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.11"
 requests = "^2.25.0"
 
 [tool.poetry.group.dev.dependencies]
@@ -30,7 +30,7 @@ pytest = "^8.3.4"
 requests-mock = "^1.8.0"
 
 [tool.poetry.group.coverage.dependencies]
-coverage = "^7.6.10"
+coverage = {extras = ["toml"], version = "^7.6.10"}
 codecov = "^2.1.10"
 pytest-cov = "^6.0.0"
 
@@ -43,15 +43,14 @@ authorize = "outreach_sdk.cli.authorize:main"
 
 [tool.black]
 line-length = 120
-target-version = ['py310', 'py311', 'py312']
+target-version = ['py311', 'py312', 'py313']
 exclude = '''
 
 (
   /(
-      \.git                # exclude a few common directories in the
-    | \.mypy_cache         # root of the project
+      \.git
+    | \.mypy_cache
     | \.pytest_cache
-    | \.nox
   )/
 )
 '''

@@ -1,22 +1,42 @@
 name: Tests
 on: push
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.13'
+    - run: pip install poetry==2.0.1
+    - run: poetry install --only code-style
+    - run: poetry run flake8 outreach_sdk tests examples
+    - run: poetry run isort --check .
+    - run: poetry run black --check .
+
+  mypy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.13'
+    - run: pip install poetry==2.0.1
+    - run: poetry install --with typing
+    - run: poetry run mypy outreach_sdk tests examples
+
   tests:
     runs-on: ${{matrix.os}}
     strategy:
       matrix:
-        #os: [ubuntu-latest, macos-latest, windows-latest]
-        os: [ubuntu-latest, windows-latest]
-        python-version: ['3.10', '3.11', '3.12']
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python-version: ['3.11', '3.12', '3.13']
     name: Python ${{matrix.python-version}} / ${{matrix.os}}
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-python@v1
+    - uses: actions/checkout@v4
+    - uses: actions/setup-python@v5
       with:
         python-version: ${{matrix.python-version}}
-        architecture: x64
-    - run: pip install nox==2020.8.22
     - run: pip install poetry==2.0.1
-    - run: nox -s lint-${{matrix.python-version}}
-    - run: nox -s mypy-${{matrix.python-version}}
-    - run: nox -s tests-${{matrix.python-version}}
+    - run: poetry install --with tests
+    - run: poetry run pytest
